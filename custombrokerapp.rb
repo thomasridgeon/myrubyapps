@@ -173,13 +173,24 @@ get '/portcharges' do
 end
 
 post '/calculate' do
+#This section of code is a Sinatra route that handles the form submission and performs the initial part of the calculation. It's the logic that runs on the server after a user clicks the "Calculate Charges" button on the form.
+#post '/calculate' do: This line defines the route. post: This specifies the HTTP method. This code block will only execute when a POST request is sent to the /calculate URL. This happens when the user submits the form.
   num_containers = params[:num_containers].to_i
+  #num_containers = params[:num_containers].to_i: This line retrieves the value from the "Number of Containers" input field.
+  #params: Sinatra automatically collects all the data submitted by a form and puts it into a hash named params.
+  #params[:num_containers]: This accesses the value from the form field that had the name attribute of 'num_containers'.
   container_type = params[:container_type]
+  #This line does the same for container type, as the line above it did for number of containers, except the value is already a string, so no conversion is needed.
   total charge = 0.0
+  #total_charge = 0.0: This line initializes a variable to store the final calculated total. It's set to 0.0 to ensure it's a floating-point number, which is necessary for precise monetary calculations.
 
   if params[:fas] == 'on'
+    #if params[:fas] == 'on': This is a conditional statement that checks if the "FAS" checkbox was selected in the form. When a checkbox is checked, its value is sent as 'on'.
     rate = RATES['fas'][container_type]
+    #rate = RATES['fas'][container_type]: If the checkbox was checked, this line looks up the specific charge rate. It first accesses the RATES hash with the key 'fas', and then it uses the container_type (e.g., '20ST') as the key to find the corresponding rate.
     total_charge += num_containers * rate if rate
+    #This line performs the actual calculation for the FAS charge and adds it to the total_charge variable. The if rate check ensures that the calculation only happens if a valid rate was found in the RATES hash.
+    #the += operator is a shorthand way to add a value to a variable and then reassign the result to that same variable. It's a combination of addition and assignment. The line total_charge += num_containers * rate is an efficient way of writing: total_charge = total_charge + (num_containers * rate)
   end
 
   if params[:security_fee] == 'on'
@@ -205,4 +216,7 @@ post '/calculate' do
   end
 
   PortChargesCalculatorPage.new(total_charge).to_html
+  #PortChargesCalculatorPage.new(total_charge).to_html is the final step in the calculation process. It's what generates the new web page with the total charges displayed.
+  #PortChargesCalculatorPage.new(total_charge): This part creates a new instance of the PortChargesCalculatorPage class. It passes the total_charge variable, which was calculated in the lines above, into the initialize method of the class. This saves the calculated total to the @result instance variable so that it can be accessed later.
+  #.to_html: This method is then called on the newly created PortChargesCalculatorPage object. It is a key method provided by the Erector gem. Its job is to take all the Ruby code you defined in the content method and convert it into a single, complete HTML string.
 end
