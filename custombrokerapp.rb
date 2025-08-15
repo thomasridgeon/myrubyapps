@@ -1,6 +1,11 @@
 #gem install sinatra
 #gem install sinatra-reloader
-#test app in local host using command: bundle exec puma
+
+#To test app in local host:
+#Once my Gemfile and config.ru files are correct, and in my custombrokerapp directory
+#cd into my custombrokerapp directory and run bundle install to download and set up all the required libraries from my Gemfile.
+#Then run the command: bundle exec puma to open the app in localhost
+
 require 'sinatra'
 require 'erector'
 require 'pry-byebug'
@@ -72,6 +77,8 @@ body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-scree
     h1(class:'text-3xl font-bold text-center text-slate-800 mb-8') do
       text 'Port Charges Calculator'
 #Here I am applying Tailwind CSS styles to my erector HTML tags.
+    end
+
 
 form(action: '/calculate', method: 'post') do 
   #form(action: '/calculate', method: 'post') do: This line uses the Erector form method to create an HTML <form> tag
@@ -98,7 +105,6 @@ form(action: '/calculate', method: 'post') do
       #These lines create the remaining <option> tags, representing the different container sizes. When a user selects one of these, its value attribute ('20ST', '40ST', etc.) is sent to the server.
     end
   end
-end
 div(class: 'mb-6') do
   label 'Include Charges:', class: 'block text-sm font-medium text-gray-700 mb-2'
   ['fas', 'security_fee', 'hazard', 'unstuffing', 'plugs_daily_rate'].each do |charge|
@@ -125,32 +131,51 @@ button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 te
   text 'Calculate Charges'
   end
 end
+
 if @result
   #This is a conditional statement. It checks if the @result instance variable has a value. In Sinatra, the @result variable is only assigned a value when the post '/calculate' route is called after the form is submitted. This if block ensures that the total charge is only displayed after the calculation has been performed and a result is available, and not when the page is first loaded.
-  div(class: 'mt-8 p-6 bg-blue-50 rounded-lg text-center') do
-    div(class: 'text-lg font-semibold text-blue-700') do
-      text 'Total Port Charges: BBD $'
-      span(class: 'text-2xl font-extrabold')
-      #span(class: 'text-2xl font-extrabold') do: This creates an HTML <span> tag, which is an inline element used to apply specific styling to a part of the text.
-      #text-2xl: Sets a much larger font size of 1.5rem (24px), making the number stand out. font-extrabold: Makes the font extra-bold to draw attention.
-      text "%.2f" % @result
-      #This is the core Ruby code that formats and displays the final number.
-      #"%.2f": This is a format specifier string. The % signifies the start of a format, .2 means "format to exactly two decimal places," and f indicates that the number is a floating-point number.
-      #% @result: This is the format operator. It applies the format string "%.2f" to the value stored in the @result variable. So, if @result is 550.0, it will display as "550.00". This is essential for displaying monetary values correctly.
+  div(class: 'mt-8 p-6 bg-blue-50 rounded-lg') do
+    h2(class: 'text-2xl font-bold text-center text-blue-800 mb-4') do
+      text 'Breakdown of Charges'
     end
-  end
-end
-end
-end
-end
-end
-end
-#The reason you see so many end keywords is that they are Ruby's way of closing a block of code. Think of it like a pair of bookends. Every time you open a block with a keyword like if or do, you need to close it with an end.
-#The first end closes the if block that checks for a result.
-#The second end closes the outer div method's do block.
-#The third end closes the inner div method's do block.
-#The fourth end closes the span method's do block.
-#The last two end keywords close the content method and the PortChargesCalculatorPage class itself, which are part of the larger Canvas code.
+    ul(class: 'mb-4') do
+      #ul(class: 'mb-4') do: This creates an unordered list (<ul>) to hold the individual charge items. The mb-4 adds a bottom margin.
+      @result[:breakdown].each do |charge_name, amount|
+        #@result[:breakdown].each do |charge_name, amount|: This is a key line that iterates through the breakdown hash 
+        #charge_name, amount|: in each loop, the key (e.g., 'FAS') is assigned to the variable charge_name and the value (the calculated amount, e.g., 1221.98) is assigned to the variable amount.
+        li(class: 'flex justify-between items-center py-2 border-b border-blue-200 last:border-b-0') do
+          #This creates a list item (<li>) for each charge. The Tailwind classes are used to format it
+          span(class: 'text-sm font-medium text-blue-700') do
+            #This creates a <span> to hold the charge name. The Tailwind classes style the text.
+            text charge_name
+          end
+          span(class: 'text-sm font-semibold text-blue-700') do
+            #This creates another <span> to hold the amount. The classes style it with a slightly heavier font weight 
+            text "BBD $%.2f" % amount
+            #"BBD $%.2f": is a Ruby format string. %.2f is the placeholder for a floating-point number, and the .2 specifies that it should be rounded to exactly two decimal places.
+            #% amount: This is the format operator. It tells Ruby to take the value of the amount variable and insert it into the placeholder in the string. The result is a clean, formatted string like "BBD $1221.98".
+          end
+        end
+      end
+    end
+    div(class: 'text-lg font-semibold text-center text-blue-700 mt-4') do
+      text 'Total Port Charges'
+      #This is an Erector method that simply inserts the string "Total Port Charges" as plain text inside the <div>
+      span(class: 'text-2xl font-extrabold') do
+        #This line creates an inline <span> element. Since it's an inline element, it appears on the same line as the text that precedes it ("Total Port Charges"). This <span> is used to apply a different style specifically to the number, making it stand out from the rest of the line. The Tailwind classes are applied
+        #A <span> is an inline HTML element that is used to apply styling or markup to a small portion of text within a larger block.
+        text "BBD $%.2f" % @result[:total]
+       end # Closes the span do block
+              end # Closes the div do block
+            end # Closes the div do block
+          end # Closes the if do block
+        end # Closes the div do block
+      end # Closes the body do block
+    end # Closes the html do block
+  end # Closes the def content do block
+end # Closes the class do block
+  
+  
 def initialize(result = nil)
   #def initialize(result = nil): This line defines the initialize method, which is the class constructor in Ruby. It accepts one parameter, result, and the = nil part makes this parameter optional. When a page object is created without a result (e.g., on the initial /portcharges page load), result is set to nil. When a new page object is created after a calculation, the total charge is passed as the result.
   super ({})
@@ -188,40 +213,71 @@ post '/calculate' do
   #This line does the same for container type, as the line above it did for number of containers, except the value is already a string, so no conversion is needed.
   total_charge = 0.0
   #total_charge = 0.0: This line initializes a variable to store the final calculated total. It's set to 0.0 to ensure it's a floating-point number, which is necessary for precise monetary calculations.
+  breakdown = {}
+  #I want to add a breakdown of each charge also, so I need to create a hash {} for the breakdown, and now within each of the if conditions, I will save the calculated charge to this new breakdown hash.
 
   if params['fas'] == 'on'
     #if params[:fas] == 'on': This is a conditional statement that checks if the "FAS" checkbox was selected in the form. When a checkbox is checked, its value is sent as 'on'.
     rate = RATES['fas'][container_type]
     #rate = RATES['fas'][container_type]: If the checkbox was checked, this line looks up the specific charge rate. It first accesses the RATES hash with the key 'fas', and then it uses the container_type (e.g., '20ST') as the key to find the corresponding rate.
-    total_charge += num_containers * rate if rate
-    #This line performs the actual calculation for the FAS charge and adds it to the total_charge variable. The if rate check ensures that the calculation only happens if a valid rate was found in the RATES hash.
-    #the += operator is a shorthand way to add a value to a variable and then reassign the result to that same variable. It's a combination of addition and assignment. The line total_charge += num_containers * rate is an efficient way of writing: total_charge = total_charge + (num_containers * rate)
+    charge_amount = num_containers * rate 
+    #charge_amount =: This is a variable assignment. It creates a new variable named charge_amount and gives it a value.
+    total_charge += charge_amount if rate 
+    #total_charge: This is the variable that keeps a running total of all the charges.
+    #+=: This is a shorthand operator. It means "add the value on the right to the variable on the left and reassign the result to the variable." So, total_charge += charge_amount is the same as writing total_charge = total_charge + charge_amount.
+    breakdown['FAS'] = charge_amount if rate 
+    #breakdown: This is the new hash you created to store the breakdown of charges.
+    #['FAS'] =: This is the syntax for adding a new key-value pair to a hash. The key is 'FAS' (a string you chose to describe the charge), and the value is the calculated charge_amount.
   end
 
   if params['security_fee'] == 'on'
     rate = RATES['security_fee'][container_type]
-    total_charge += num_containers * rate if rate
+    charge_amount = num_containers * rate
+    total_charge += charge_amount if rate
+    breakdown['Security Fee'] = charge_amount if rate
   end
 
   if params['hazard'] == 'on'
     rate = RATES['hazard'][container_type]
-    total_charge += num_containers * rate if rate
+    charge_amount = num_containers * rate
+    total_charge += charge_amount if rate
+    breakdown['Hazard'] = charge_amount if rate
   end
 
   if params['unstuffing'] == 'on'
     rate = RATES['unstuffing'][container_type]
-    total_charge += num_containers * rate if rate
+    charge_amount = num_containers * rate
+    total_charge += charge_amount if rate
+    breakdown['Unstuffing'] = charge_amount if rate 
   end
 
   if params['plugs_daily_rate'] == 'on'
     days = params['plugs_days'].to_i
     if days > 0
-      total_charge += num_containers * days * RATES['plugs_daily_rate'][container_type]
+      rate = RATES['plugs_daily_rate'][container_type]
+      charge_amount = num_containers * days * rate
+      total_charge += charge_amount if rate
+      breakdown['Plugs Daily Rate'] = charge_amount if rate
     end
   end
 
-  PortChargesCalculatorPage.new(total_charge).to_html
-  #PortChargesCalculatorPage.new(total_charge).to_html is the final step in the calculation process. It's what generates the new web page with the total charges displayed.
-  #PortChargesCalculatorPage.new(total_charge): This part creates a new instance of the PortChargesCalculatorPage class. It passes the total_charge variable, which was calculated in the lines above, into the initialize method of the class. This saves the calculated total to the @result instance variable so that it can be accessed later.
-  #.to_html: This method is then called on the newly created PortChargesCalculatorPage object. It is a key method provided by the Erector gem. Its job is to take all the Ruby code you defined in the content method and convert it into a single, complete HTML string.
+  result_data = {
+    total: total_charge,
+    breakdown: breakdown
+  }
+  PortChargesCalculatorPage.new(result_data).to_html
+  #Creating the Data Package:
+  #result_data =: This line creates a new variable named result_data.
+  #{ ... }: The curly braces create a new hash, which is a collection of key-value pairs. This hash acts as a single package to hold all the information you want to pass to the page.
+  #total: total_charge: This creates the first key-value pair.
+  #total:: This is a symbol, which is a lightweight, immutable string in Ruby. It's used here as a permanent, fixed name for the key.
+  #total_charge: This is the variable holding the final calculated total. Its value is assigned to the total: key.
+  #breakdown: breakdown: This creates the second key-value pair.
+  #breakdown:: This is another symbol used as the key.
+  #breakdown: This is the variable holding the hash you created that contains the details of each individual charge. This means your result_data hash holds another hash as one of its values.
+  
+  #Passing the Data to the Page:
+  #PortChargesCalculatorPage.new(...): This creates a new instance of your PortChargesCalculatorPage class. When you call .new, it automatically runs the initialize method inside your class.
+  #(result_data): This is the argument you are passing to the initialize method. The entire hash you just created is passed as the result parameter to that method, which then assigns it to the @result instance variable.
+  #.to_html: This is the final step. It's an Erector method that takes all the Ruby code you defined in your content method and generates a complete HTML string. This final HTML string is what the web browser will receive and display to the user.
 end
