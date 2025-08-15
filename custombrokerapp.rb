@@ -1,7 +1,9 @@
 #gem install sinatra
 #gem install sinatra-reloader
+#test app in local host using command: bundle exec puma
 require 'sinatra'
 require 'erector'
+require 'pry-byebug'
 require 'sinatra/reloader'
 configure :development do
   register Sinatra::Reloader
@@ -9,34 +11,34 @@ end
 #
 RATES = {
   'fas' => {
-    '20ST' => 1221.98
-    '40ST' => 2443.96
-    '40HC' => 2661.32
-    '20RH' => 1328.93
-    '40RH' => 2657.85
+    '20ST' => 1221.98,
+    '40ST' => 2443.96,
+    '40HC' => 2661.32,
+    '20RH' => 1328.93,
+    '40RH' => 2657.85,
   },
   'security_fee' => {
-    '20ST' => 155.10
-    '40ST' => 310.20
-    '40HC' => 310.20
-    '20RH' => 105.75
-    '40RH' => 211.50
+    '20ST' => 155.10,
+    '40ST' => 310.20,
+    '40HC' => 310.20,
+    '20RH' => 105.75,
+    '40RH' => 211.50,
 },
 'hazard' => {
-  '20ST' => 118.68
-  '40ST' => 259.09
-  '40HC' => 259.09
+  '20ST' => 118.68,
+  '40ST' => 259.09,
+  '40HC' => 259.09,
 
 },
 'unstuffing' => {
-  '20ST' => 528.75
-  '40ST' => 1075.50
-  '40HC' => 1075.50
+  '20ST' => 528.75,
+  '40ST' => 1075.50,
+  '40HC' => 1075.50,
 
 },
 'plugs_daily_rate' => {
-  '20RH' => 115.15
-  '40RH' => 230.30
+  '20RH' => 115.15,
+  '40RH' => 230.30,
 }
 }
 #In Ruby, => is a special operator most commonly used to define key-value pairs within a hash. It separates the key from its corresponding value.
@@ -66,6 +68,7 @@ class PortChargesCalculatorPage < Erector::Widget
 
 body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-screen p-5') do
   div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full') do
+    #The key: 'value' syntax with the colon is used for passing named arguments to a method. You see this with the Erector gem: div(class: '...') here, class: is a named argument for the div method.
     h1(class:'text-3xl font-bold text-center text-slate-800 mb-8') do
       text 'Port Charges Calculator'
 #Here I am applying Tailwind CSS styles to my erector HTML tags.
@@ -75,7 +78,7 @@ form(action: '/calculate', method: 'post') do
   #action: '/calculate': This attribute specifies the URL (/calculate) to which the form data will be sent when the user clicks the "Calculate Charges" button. This corresponds to the post '/calculate' route in the Sinatra app.
   #method: 'post': This specifies that the form data will be sent using the HTTP POST method, which is the standard way to submit data that creates or updates something on the server.
   div(class: 'mb-6') do
-    label('Number of Containers:' for 'num_containers', class: 'block text-sm font-medium text-gray-700 mb-2')
+    label('Number of Containers:', for: 'num_containers', class: 'block text-sm font-medium text-gray-700 mb-2')
     #This creates an HTML <label> tag with the text "Number of Containers:". for: 'num_containers': This attribute links the label to the input field with the matching id of num_containers. This is important for accessibility, as clicking the label will focus the input field.
     input(type: 'number', id: 'num_containers', name: 'num_containers', min: '1', required: true, class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500') do
     #This line generates the <input> tag. type: 'number': This makes it a number-only input field, which often brings up a numeric keypad on mobile devices. id: 'num_containers' and name: 'num_containers': The id is used to link to the label, and the name is the key used to access the input's value in the Sinatra params hash when the form is submitted.   
@@ -85,7 +88,7 @@ form(action: '/calculate', method: 'post') do
     #This creates the label for the dropdown menu, linking it to the container_type element.
     #select(id: 'container_type', name: 'container_type', required: true, class: 'w-full ...') do: This creates the <select> tag, which is the dropdown itself.
     select(id: 'container_type', name: 'container_type', required: true, class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500') do 
-      option('Select a size...', value '', disabled: true, selected: true)
+      option('Select a size...', value: '', disabled: true, selected: true)
       #This is the first <option> in the dropdown. It acts as a placeholder or a prompt for the user. value: '': This option has an empty value.value: '': This option has an empty value. disabled: true: This makes the option unclickable. selected: true: This makes the option the default one shown when the page loads.
       option('20ST', value: '20ST')
       option('40ST', value: '40ST')
@@ -95,9 +98,10 @@ form(action: '/calculate', method: 'post') do
       #These lines create the remaining <option> tags, representing the different container sizes. When a user selects one of these, its value attribute ('20ST', '40ST', etc.) is sent to the server.
     end
   end
+end
 div(class: 'mb-6') do
   label 'Include Charges:', class: 'block text-sm font-medium text-gray-700 mb-2'
-  ['fas', 'security fee', 'hazard', 'unstuffing', 'plugs'].each do |charge|
+  ['fas', 'security_fee', 'hazard', 'unstuffing', 'plugs_daily_rate'].each do |charge|
     #This is a core Ruby loop that makes the code efficient. is an array of strings, where each string corresponds to a type of charge. .each do |charge| iterates over this array one item at a time. In each iteration, the current string (e.g., 'fas', then 'security_fee') is assigned to the variable charge. This means the code inside the loop will run once for each type of charge. 
     div(class: 'flex items-center mb-3') do
       #div(class: 'flex items-center mb-3') do: Inside the loop, this line creates a <div> to wrap each individual checkbox and its label. The flex and items-center classes use Tailwind's flexbox to align the checkbox and its label horizontally, and the mb-3 class adds a bottom margin to space out the checkboxes vertically.
@@ -123,8 +127,8 @@ button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 te
 end
 if @result
   #This is a conditional statement. It checks if the @result instance variable has a value. In Sinatra, the @result variable is only assigned a value when the post '/calculate' route is called after the form is submitted. This if block ensures that the total charge is only displayed after the calculation has been performed and a result is available, and not when the page is first loaded.
-  div(class 'mt-8 p-6 bg-blue-50 rounded-lg text-center') do
-    div(class 'text-lg font-semibold text-blue-700') do
+  div(class: 'mt-8 p-6 bg-blue-50 rounded-lg text-center') do
+    div(class: 'text-lg font-semibold text-blue-700') do
       text 'Total Port Charges: BBD $'
       span(class: 'text-2xl font-extrabold')
       #span(class: 'text-2xl font-extrabold') do: This creates an HTML <span> tag, which is an inline element used to apply specific styling to a part of the text.
@@ -149,8 +153,9 @@ end
 #The last two end keywords close the content method and the PortChargesCalculatorPage class itself, which are part of the larger Canvas code.
 def initialize(result = nil)
   #def initialize(result = nil): This line defines the initialize method, which is the class constructor in Ruby. It accepts one parameter, result, and the = nil part makes this parameter optional. When a page object is created without a result (e.g., on the initial /portcharges page load), result is set to nil. When a new page object is created after a calculation, the total charge is passed as the result.
-  super
+  super ({})
   #super: The super keyword calls the initialize method of the parent class, which is Erector::Widget. This is a crucial step that ensures the parent class is properly set up before the subclass code runs.
+  #super({}). This passes an empty hash to the parent class
   @result = result
   #@result = result: This line assigns the value of the result parameter to an instance variable named @result. An instance variable is a variable that belongs to a specific instance of the class, making its value available to all other methods within that instance, such as the content method that renders the HTML.
 #The @ symbol in front of a variable name in Ruby signifies that it's an instance variable. Think of a class as a blueprint for a house and an instance of that class as a specific house built from that blueprint.
@@ -181,10 +186,10 @@ post '/calculate' do
   #params[:num_containers]: This accesses the value from the form field that had the name attribute of 'num_containers'.
   container_type = params[:container_type]
   #This line does the same for container type, as the line above it did for number of containers, except the value is already a string, so no conversion is needed.
-  total charge = 0.0
+  total_charge = 0.0
   #total_charge = 0.0: This line initializes a variable to store the final calculated total. It's set to 0.0 to ensure it's a floating-point number, which is necessary for precise monetary calculations.
 
-  if params[:fas] == 'on'
+  if params['fas'] == 'on'
     #if params[:fas] == 'on': This is a conditional statement that checks if the "FAS" checkbox was selected in the form. When a checkbox is checked, its value is sent as 'on'.
     rate = RATES['fas'][container_type]
     #rate = RATES['fas'][container_type]: If the checkbox was checked, this line looks up the specific charge rate. It first accesses the RATES hash with the key 'fas', and then it uses the container_type (e.g., '20ST') as the key to find the corresponding rate.
@@ -193,25 +198,25 @@ post '/calculate' do
     #the += operator is a shorthand way to add a value to a variable and then reassign the result to that same variable. It's a combination of addition and assignment. The line total_charge += num_containers * rate is an efficient way of writing: total_charge = total_charge + (num_containers * rate)
   end
 
-  if params[:security_fee] == 'on'
-    rates = RATES['security_fee'][container_type]
+  if params['security_fee'] == 'on'
+    rate = RATES['security_fee'][container_type]
     total_charge += num_containers * rate if rate
   end
 
-  if params[:hazard][container_type] == 'on'
-    rates = RATES['hazard'][container_type]
+  if params['hazard'] == 'on'
+    rate = RATES['hazard'][container_type]
     total_charge += num_containers * rate if rate
   end
 
-  if params[:unstuffing][container_type] == 'on'
-    rates = RATES['unstuffing'][container_type]
+  if params['unstuffing'] == 'on'
+    rate = RATES['unstuffing'][container_type]
     total_charge += num_containers * rate if rate
   end
 
-  if params[:plugs] == 'on'
-    days = params[plugs_days].to_i
+  if params['plugs_daily_rate'] == 'on'
+    days = params['plugs_days'].to_i
     if days > 0
-      total_charge += num_containers * days * RATES['plugs_daily_rate']
+      total_charge += num_containers * days * RATES['plugs_daily_rate'][container_type]
     end
   end
 
