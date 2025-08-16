@@ -33,7 +33,7 @@ Now create a parent directory for this repository to be cloned into. To do so, n
 cd ~/your_parent_directory
 ```
 
-Replacing "your_parent_directory" with whatever parent directory you have chose for this repository's directory to be located.
+Replacing "your_parent_directory" with whatever parent directory you have chose for this repository's directory.
 
 Once you have navigated to your parent directory, run the following command:
 
