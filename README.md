@@ -27,28 +27,28 @@ gem install sinatra
 gem install sinatra-reloader
 ```
 
-Now create a directory for this repository and clone it. To do so, navigate to the directory in your terminal:
+Now create a parent directory for this repository to be cloned into. To do so, navigate to the parent directory in your terminal:
 
 ```bash
 cd ~/your_parent_directory
 ```
 
-Replacing "your_parent_directory" with whatever parent directory you have chose for the directory you want to clone this repository into.
+Replacing "your_parent_directory" with whatever parent directory you have chose for this repository's directory to be located.
 
-Once you have navigated to your chosen parent directory, run the following command:
+Once you have navigated to your parent directory, run the following command:
 
 ```bash
 git clone git@github.com:thomasridgeon/myrubyapps.git
 ```
 
-You should now see the following files in your directory:
+You should now see this repository's directory within your parent directory, with the following files inside of it:
 * Gemfile
 * Gemfile.lock
 * config.ru
 * myrubyapps.rb
 * README.md
 
-Finally, in your terminal, navigate to your directory which you just cloned this repository into and run the following command:
+Finally, in your terminal, navigate to the repository directory and run the following command:
 
 ```bash
 bundle install
@@ -57,6 +57,7 @@ bundle install
 This will download and set up all the required libraries from the Gemfile.
 
 Now you're ready to run the app in localhost. To do so, run the following command:
+
 ```bash
 bundle exec puma
 ```
