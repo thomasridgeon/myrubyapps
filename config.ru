@@ -1,2 +1,2 @@
-require './custombrokerapp.rb'
+require './myrubyapps.rb'
 run Sinatra::Application
