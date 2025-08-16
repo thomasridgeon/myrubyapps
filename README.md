@@ -62,9 +62,9 @@ Now you're ready to run the app in localhost. To do so, run the following comman
 bundle exec puma
 ```
 
-You can now open your browser and go to http://0.0.0.0:9292 
+You can now open your browser and go to the link provided in your terminal, such as http://0.0.0.0:9292 
 
-To navigate to the Port Charges Calculator, use the path http://0.0.0.0:9292/portcharges
+To navigate to the Port Charges Calculator, use the /portcharges path http://0.0.0.0:9292/portcharges
 
 
 
