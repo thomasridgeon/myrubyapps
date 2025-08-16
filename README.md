@@ -35,7 +35,7 @@ cd ~/your_parent_directory
 
 Replacing "your_parent_directory" with whatever parent directory you have chose for the directory you want to clone this repository into.
 
-Once your are in your chosen parent directory, run the following command:
+Once you have navigated to your chosen parent directory, run the following command:
 
 ```bash
 git clone git@github.com:thomasridgeon/myrubyapps.git
