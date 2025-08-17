@@ -6,14 +6,24 @@
 #cd into my custombrokerapp directory and run bundle install to download and set up all the required libraries from my Gemfile.
 #Then run the command: bundle exec puma to open the app in localhost
 
+#---REQUIREMENTS---------------------------------
 require 'sinatra'
+require 'dotenv/load'
+require 'httparty' #required for solar calculator to make API calls
+require 'json' #required to parse json responses from the API
 require 'erector'
 require 'pry-byebug'
 require 'sinatra/reloader'
 configure :development do
   register Sinatra::Reloader
 end
-#
+#-----------------------------------------------
+
+#---API Keys------------------------------------
+OPENUV_API_KEY = ENV['OPENUV_API_KEY']
+#-----------------------------------------------
+
+#---RATES FOR PORT CHARGES----------------------
 RATES = {
   'fas' => {
     '20ST' => 1221.98,
@@ -49,6 +59,67 @@ RATES = {
 #In Ruby, => is a special operator most commonly used to define key-value pairs within a hash. It separates the key from its corresponding value.
 #the curly braces {} are used to define a hash. A hash is a fundamental data structure in Ruby that stores data in key-value pairs. It's a perfect way to organize and look up information.
 #
+#----------------------------------------
+
+#---HOMEPAGE-----------------------------
+class HomePage < Erector::Widget 
+  def content
+    html do
+      head do
+        title { 'Welcome to my Website' }
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
+      end
+      body(class: 'bg-gray-100 p-8 font-sans antialiased') do
+        div(class: 'container mx-auto bg-white rounded-xl shadow-lg p-6') do
+          h1(class: 'text-4xl font-bold text-gray-800 mb-4') {'Welcome to my Website'}
+          p(class: 'text-lg text-gray-600 mb-6') {'This is where I showcase the small web apps I have built while learning to program in Ruby'}
+          u1(class: 'space-y-2') do
+            #The ul method creates an unordered list <ul> tag. This is a list of items that don't have a specific order, and they are typically displayed with bullet points.
+            li do
+              #The li method creates a list item <li> tag. Each <li> tag represents a single item in a list. In your code, each link to a calculator is a separate list item.
+              a(href: '/portcharges', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') {'Go to the Port Charges Calculator'} 
+              #The a method creates an anchor <a> tag. This tag is used to create a hyperlink, which is a clickable link that takes the user from one page to another.
+            end
+            li do 
+              a(href: '/solardcalculator', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') {'Go to the Solar D Calculator'}
+            end
+          end
+        end
+      end
+    end
+  end
+end
+#---------------------------------------------
+
+#---ERECTOR WIDGET FOR SOLAR D CALCULATOR PAGE
+class SolarDCalculatorPage > Erector::Widget 
+  needs :uv_indux
+
+  def content
+    html do
+      head do
+        title { 'Solar D Calculator' }
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' 
+      end
+      body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-screen p-5') do
+        div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full text-center') do
+          h1(class: 'text-3xl font-bold text-center text-slate-800 mb-8') {'Solar D Calculator'}
+          p(class: 'text-lg font-semibold text-blue-700 mb-6') {'The current UV index at your location is'}
+          p(class: 'text-5xl font-extrabold text-blue-800 mb-6') {uv_index}
+          div(class: 'mt-8') do
+            a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block') {'Return to Homepage'}
+          end
+        end
+      end
+    end
+  end
+end
+#---------------------------------------------
+
+
+#---ERECTOR WIDGET FOR PORT CHARGES CALCULATOR-----
+
+
 #With the Erector gem, instead of writing a big block of HTML, you define your page's structure and content using Ruby methods. This lets you stay in the Ruby world you're more comfortable with.
 
 #Use an Erector class to define the HTML with Tailwind CSS classes
@@ -65,8 +136,8 @@ class PortChargesCalculatorPage < Erector::Widget
         #meta(charset: 'UTF-8'): This line generates the <meta charset="UTF-8"> tag. This is crucial for web browsers to correctly display characters from different languages.
         #meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0'): This generates a meta tag that is essential for making the page responsive and look good on mobile devices. It tells the browser to match the page's width to the device's screen width.
         title 'Port Charges Calculator'
-        script(src: 'https://cdn.tailwindcss.com')
-        #This line generates a <script> tag. The src attribute tells the browser to download the Tailwind CSS library from a public URL. This is how all the styling utility classes (like bg-white, p-10, text-3xl) are made available for the rest of the page.
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
+        #This is the standard HTML way to link to the Tailwind CSS stylesheet. It tells the browser, "Go get the CSS file at this URL and apply its styles to this page."
       end
       #Tailwind CSS is a framework which provides a large set of pre-built classes that you can apply directly to your HTML elements to style them.
       #The relationship between Erector and Tailwind CSS is that one provides the structure and the other provides the styling. They work together by allowing you to build the HTML structure using Ruby methods (Erector) and then apply pre-built styling to those elements by passing Tailwind's utility classes as arguments to those methods. Essentially, Erector creates the tags, and Tailwind CSS provides the look and feel.
@@ -78,6 +149,10 @@ body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-scree
       text 'Port Charges Calculator'
 #Here I am applying Tailwind CSS styles to my erector HTML tags.
     end
+
+#-----------------------------------------------------------------------------
+
+#---PORT CHARGES CALCULATOR LOGIC---------
 
 
 form(action: '/calculate', method: 'post') do 
@@ -190,6 +265,11 @@ def initialize(result = nil)
   end
 end 
 
+
+#---MAIN SINATRA ROUTES----------------
+
+#Port Charges Route
+
 get '/portcharges' do
   #The code get '/' is a fundamental part of the Sinatra framework and represents the homepage of your web application. It's the first thing a user sees when they visit your site.
   #The keyword get is an HTTP method. It's the standard way for a web browser to request a resource from a web server. When you type a URL into a browser and press Enter, the browser sends a GET request.
@@ -201,6 +281,33 @@ get '/portcharges' do
   #This line creates a new instance of the PortChargesCalculatorPage class. This is the class you defined using Erector to build the HTML for your page.
   #.to_html: This method is called on the new PortChargesCalculatorPage object. It's an Erector method that takes all of the Ruby methods you defined in the content block (html, head, body, etc.) and converts them into a single string of valid HTML. This HTML string is what the web browser will receive and render as the homepage.
 end
+
+#Solar D Calculator route
+get '/solardcalculator' do
+  ip = request.ip
+  response = HTTParty.get("http://ip-api.com/json/#{ip}")
+  # Make an API call to ip-api to get the location data.
+  # No API key is required.
+  location_data = JSON.parse(response.body)
+  lat = location_data['lat']
+  lng = location_data['lon']
+  # Parse the JSON response from ip-api to get the latitude and longitude.
+  openuv_response = HTTParty.get(
+    "https://api.openuv.io/api/v1/uv?lat=#{lat}&lng=#{lng}")
+    headers: { x-access-token => OPENUV_API_KEY }
+    # Now, use those coordinates to make an API call to OpenUV.
+    openuv_data = JSON.parse(openuv_response.body)
+    uv_index = openuv_data ['result']['uv']
+    # Parse the JSON response from OpenUV to get the UV index.
+  SolarDCalculatorPage.new.to_html
+  # Render the page using the Erector widget and pass the calculated UV index to it.
+end
+
+#Homepage route
+get '/' do
+  HomePage.new.to_html
+end
+#----------------------------------
 
 post '/calculate' do
 #This section of code is a Sinatra route that handles the form submission and performs the initial part of the calculation. It's the logic that runs on the server after a user clicks the "Calculate Charges" button on the form.
