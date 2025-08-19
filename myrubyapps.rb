@@ -73,7 +73,7 @@ class HomePage < Erector::Widget
         div(class: 'container mx-auto bg-white rounded-xl shadow-lg p-6') do
           h1(class: 'text-4xl font-bold text-gray-800 mb-4') {'Welcome to my Website'}
           p(class: 'text-lg text-gray-600 mb-6') {'This is where I showcase the small web apps I have built while learning to program in Ruby'}
-          u1(class: 'space-y-2') do
+          ul(class: 'space-y-2') do
             #The ul method creates an unordered list <ul> tag. This is a list of items that don't have a specific order, and they are typically displayed with bullet points.
             li do
               #The li method creates a list item <li> tag. Each <li> tag represents a single item in a list. In your code, each link to a calculator is a separate list item.
@@ -92,9 +92,9 @@ end
 #---------------------------------------------
 
 #---ERECTOR WIDGET FOR SOLAR D CALCULATOR PAGE
-class SolarDCalculatorPage > Erector::Widget 
-  needs :uv_indux, :d_time
-  #accepts both the UV index from openuv and the time calculated for optimal vitamin D 
+class SolarDCalculatorPage < Erector::Widget 
+  needs :uv_index, :result_time
+  #added variables that will hold the numerical values for the UV index from openuv, the current time, and the time calculated for optimal vitamin D 
 
   def content
     html do
@@ -106,12 +106,12 @@ class SolarDCalculatorPage > Erector::Widget
         div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full text-center') do
           h1(class: 'text-3xl font-bold text-center text-slate-800 mb-8') {'Solar D Calculator'}
 
-          if @d_time.nil? #if nil, this means we will display the form for the initial GET request
+          if @result_time.nil? ##if nil, this means we will display the form for the initial GET request 
           p(class: 'text-lg font-semibold text-blue-700 mb-6') {'The current UV index at your location is'}
-          p(class: 'text-5xl font-extrabold text-blue-800 mb-6') {uv_index}
+          p(class: 'text-5xl font-extrabold text-blue-800 mb-6') {@uv_index}
 
           form(action: '/solardcalculator', method: 'post') do 
-            input(type 'hidden', name: 'uv_index', value: @uv_index)
+            input(type: 'hidden', name: 'uv_index', value: @uv_index)
             #here we add a hiden input to pass on the UV index to the POST request
 
           div(class: 'mb-6') do
@@ -121,8 +121,9 @@ class SolarDCalculatorPage > Erector::Widget
 
           div(class: 'mb-6') do
             label('Fitzpatrick Skin Type', for: 'skin_type', class: 'block text-sm font-medium text-gray-700 mb-2')
-            select(id: 'skin type', name: 'skin type', required: true, class: 'block text-sm font-medium text-gray-700 mb-2')
-            option('Select your skin type:', value: '', disabled: true, class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500') do
+            select(id: 'skin type', name: 'skin_type', required: true, class: 'block text-sm font-medium text-gray-700 mb-2') do
+              ## The classes are applied to the SELECT tag, as most browsers ignore them on OPTION tags.
+            option('Select your skin type:', value: '', disabled: true, selected: true)
               option('Type I: Very Fair (always burns, does not tan)', value: '1')
               option('Type II: Fair (burns easily, tans poorly)', value: '2')
               option('Type III: Medium (sometimes burns, tans after initial burn)', value: '3')
@@ -136,9 +137,10 @@ class SolarDCalculatorPage > Erector::Widget
             text 'Calculate Time Required in the Sun'
           end
         end
+
       else #else we are on the POST request, so display the results
         p(class: 'text-lg font-semibold text-blue-700 mb-6') { "To get 1,000 IUs of Vitamin D, you'll need to be in the sun for:" }
-        p(class: 'text-5xl font-extrabold text-blue-800 mb-6') { "#{('%.1f' % @d_time).to_f} minutes" }
+        p(class: 'text-5xl font-extrabold text-blue-800 mb-6') { "#{('%.1f' % @result_time).to_f} minutes" }
         #@d_time: This is an instance variable that holds the raw, calculated time in minutes from the post '/solarcalculator'
         #'%.1f' % @d_time: This is Ruby's string formatting operator. The %.1f is a format specifier that tells Ruby to take the number in @d_time and turn it into a string with exactly one decimal place. 
         #.to_f: This is a method that converts the formatted string back into a floating-point number. 
@@ -159,17 +161,15 @@ class SolarDCalculatorPage > Erector::Widget
           br
           text "Çakmak, T., Yıldız, R., Usta, G., & Yılmaz, A. E. (2021). Holick's Rule Implementation: Calculation of Produced Vitamin D from Sunlight Based on UV Index, Skin Type, and Area of Sunlight Exposure on the Body. International Journal of Energy Research, 45(13), 19576-19590."
         end
-      end
-    end
+      end # THIS END CLOSES THE DIV FOR "ABOUT THE CALCULATION"
 
 
             a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block') {'Return to Homepage'}
-          end
-        end
-      end
-    end
-  end
-end
+          end #THIS END CLOSES THE MAIN CONTAINER DIV
+        end # THIS END CLOSES THE BODY TAG.
+      end # THIS END CLOSES THE HTML TAG.
+    end # THIS END CLOSES THE CONTENT METHOD.
+  end # THIS END CLOSES THE CLASS
 #---------------------------------------------
 
 
@@ -338,34 +338,74 @@ get '/portcharges' do
   #.to_html: This method is called on the new PortChargesCalculatorPage object. It's an Erector method that takes all of the Ruby methods you defined in the content block (html, head, body, etc.) and converts them into a single string of valid HTML. This HTML string is what the web browser will receive and render as the homepage.
 end
 
-#Solar D Calculator route
+
+#---SOLAR D CALCULATOR ROUTE-------------
 get '/solardcalculator' do
   ip = request.ip
-  response = HTTParty.get("http://ip-api.com/json/#{ip}")
+  location_response = HTTParty.get("http://ip-api.com/json/#{ip}")
   # Make an API call to ip-api to get the location data.
   # No API key is required.
+
+  if location_response.success? && JSON.parse(location_response.body)['status'] == 'success'
   location_data = JSON.parse(response.body)
   lat = location_data['lat']
   lng = location_data['lon']
   # Parse the JSON response from ip-api to get the latitude and longitude.
+  else
+    #Fallback to hardcoded Barabdos coordinates if IP-API fails, which it does when testing in localhost because localhost resolves to 127.0.0.1, based on which IP-API cannot determine a geographic location.
+    lat = 13.1939
+    lng = 59.5432
+  end 
+
+  #---TEMPORARY LINES FOR DEBUGGING----------
+  puts "Latitude: #{lat}"
+  puts "Longitude: #{lng}"
+  #------------------------------------------
+
   openuv_response = HTTParty.get(
-    "https://api.openuv.io/api/v1/uv?lat=#{lat}&lng=#{lng}")
-    headers: { x-access-token => OPENUV_API_KEY }
-    # Now, use those coordinates to make an API call to OpenUV.
-    openuv_data = JSON.parse(openuv_response.body)
-    uv_index = openuv_data ['result']['uv']
-    # Parse the JSON response from OpenUV to get the UV index.
-  SolarDCalculatorPage.new.to_html
+    "https://api.openuv.io/api/v1/uv?lat=#{lat}&lng=#{lng}",
+    headers: { 'x-access-token' => OPENUV_API_KEY }
+  )
+
+#---MORE DEBUGGING---
+puts "OpenUV API Response Status: #{openuv_response.code}"
+puts "OpenUV API Response Body: #{openuv_response.body}"
+#-------------------
+
+if openuv_response.success?
+  #Adds error handling. Check if the OpenUV API call was successful before trying to parse the body.
+  openuv_data = JSON.parse(openuv_response.body)
+  uv_index = openuv_data ['result']['uv']
+  # Parse the JSON response from OpenUV to get the UV index.
+  #Next, get the current time and format it
+  d_time = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+  SolarDCalculatorPage.new(uv_index: uv_index, d_time: d_time, result_time: nil).to_html
   # Render the page using the Erector widget and pass the calculated UV index to it.
+  # We pass nil to `result_time` on the GET request so the form is displayed.
+else
+  "Error: Could not retrieve UV data from OpenUV API. Please check your API key or try again later"
+  end
+#else
+  #"Error: Could not retrieve location data from IP-API" - No need for this error message anymore, since we know that during testing with localhost, IP-API will not work to get a geographic location.
+  #end
 end
 
 post '/solardcalculator' do
   #This is the POST route that handles the calculation
 
-uv_index = params[:uv_index].to_f
-age = params[:age].to_i
-skin_type = params[:skin_type].to_i
+uv_index = params['uv_index']&.to_f
+age = params['age']&.to_i
+skin_type = params['skin_type']&.to_i
 #Here we get the variables from the form submission
+#&.to_f and &.to_i: These are used to safely call a method on an object. The &. operator checks if the object is nil before trying to call the method. If the object is nil, it just returns nil instead of causing an error.
+
+# Check if any of the required parameters are missing (nil).
+# If so, handle the error gracefully instead of crashing.
+if uv_index.nil? || age.nil? || skin_type.nil?
+  redirect '/solardcalculator'
+end
+
+
 
 #Fitzpatrick Skin Type Multipliers
 skin_multipliers = {
@@ -394,10 +434,10 @@ end
 
 #Calculate the required sun exposure time in minutes
 #Formula: Time (minutes) = (10 minutes) * Fitzpatrick Multiplier) * (Age Factor) * (7/ Current UV Index)
-d_time =  10.0 * skin_multipliers[skin_type] * age_factor * (7.0 / uv_index)
+required_sun_time =  10.0 * skin_multipliers[skin_type] * age_factor * (7.0 / uv_index)
 
 #Render the page with the calculation result
-SolarDCalculatorPage.new(uv_index: uv_index, d_time: d_time).to_html
+SolarDCalculatorPage.new(uv_index: uv_index, result_time: required_sun_time).to_html
 end
 
 
@@ -407,7 +447,7 @@ get '/' do
   HomePage.new.to_html
 end
 #----------------------------------
-
+#---Port Charges post route
 post '/calculate' do
 #This section of code is a Sinatra route that handles the form submission and performs the initial part of the calculation. It's the logic that runs on the server after a user clicks the "Calculate Charges" button on the form.
 #post '/calculate' do: This line defines the route. post: This specifies the HTTP method. This code block will only execute when a POST request is sent to the /calculate URL. This happens when the user submits the form.
