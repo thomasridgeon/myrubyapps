@@ -102,19 +102,21 @@ class SolarDCalculatorPage < Erector::Widget
         title { 'Solar D Calculator' }
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' 
       end
-      body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-screen p-5') do
+      body(class: 'font-sans bg-slate-100 flex justify-center min-h-screen p-5') do
         div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full text-center') do
           h1(class: 'text-3xl font-bold text-center text-slate-800 mb-8') {'Solar D Calculator'}
 
           if @result_time.nil? ##if nil, this means we will display the form for the initial GET request 
+
+            if @uv_index.nil? || @uv_index <= 0
+              p(class: 'text-lg text-red-600 mb-6') do
+                text "The UV index is currently too low(#{@uv_index}) to synthesize vitamin D."
+          end #end of UV too low message
+
+        else
           p(class: 'text-lg font-semibold text-blue-700 mb-6') {'The current UV index at your location is'}
           p(class: 'text-5xl font-extrabold text-blue-800 mb-6') {@uv_index}
 
-          if @uv_index.nil? || @uv_index <= 0
-          p(class: 'text-lg text-red-600 mb-6') {
-            "The UV index is currently too low(#{@uv_index}) to synthesize vitamin D."
-          }
-        else
           form(action: '/solardcalculator', method: 'post') do 
             input(type: 'hidden', name: 'uv_index', value: @uv_index)
             #here we add a hiden input to pass on the UV index to the POST request
@@ -122,7 +124,7 @@ class SolarDCalculatorPage < Erector::Widget
           div(class: 'mb-6') do
             label('Age', for: 'age', class: 'block text-sm font-medium text-gray-700 mb-2')
             input(type: 'number', id: 'age', name: 'age', required: true, min: '1', class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500')
-          end
+          end #end of age field
 
           div(class: 'mb-6') do
             label('Fitzpatrick Skin Type', for: 'skin_type', class: 'block text-sm font-medium text-gray-700 mb-2')
@@ -136,30 +138,34 @@ class SolarDCalculatorPage < Erector::Widget
               option('Type V: Brown (rarely burns, tans darkly easily)', value: '5')
               option('Type VI: Very Dark (never burns, always tans darkly)', value: '6')
             end
-          end
+          end #end of skin type field
 
-          p(class: 'text-base text-gray-700 mb-4') { "Based on your location and the current UV index, let's calculate the amount of time you need in the sun right now to get your recommended daily intake of vitamin D. This estimate assumes you're exposing your face, neck, arms, and legs (like in a T-shirt and shorts)." } 
+          p(class: 'text-base text-gray-700 mb-4') do
+            text "Based on your location and the current UV index, let's calculate the amount of time you need in the sun right now to get your recommended daily intake of vitamin D. This estimate assumes you're exposing your face, neck, arms, and legs (like in a T-shirt and shorts)."
+          end #if I do not use {} directly with a string, and instead use do, then text, i need to close the text
+
           button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
-            text 'Calculate Time Required in the Sun'
+            text "Calculate Time Required in the Sun"
           end
-        end #This end closes the form
-      end #This end closes the if @uv_index.nil? || @uv_index <= 0
+        end #end of form
+      end #end of UV check (too low vs form)
 
       else #else we are on the POST request, so display the results
         p(class: 'text-lg font-semibold text-blue-700 mb-6') do 
-          "To get 1,000 IUs of Vitamin D, you'll need to be in the sun for:" 
+          text "To get 1,000 IUs of Vitamin D, you'll need to be in the sun for:" 
         end
         p(class: 'text-5xl font-extrabold text-blue-800 mb-6') do 
-          "#{('%.1f' % @result_time).to_f} minutes"
+          text "#{('%.1f' % @result_time).to_f} minutes"
         end
         #@d_time: This is an instance variable that holds the raw, calculated time in minutes from the post '/solarcalculator'
         #'%.1f' % @d_time: This is Ruby's string formatting operator. The %.1f is a format specifier that tells Ruby to take the number in @d_time and turn it into a string with exactly one decimal place. 
         #.to_f: This is a method that converts the formatted string back into a floating-point number. 
         #"#{...} minutes": This is a string interpolation. The #{} syntax takes the result of the inner expression (the formatted time) and inserts it directly into the string, resulting in a final output like "15.3 minutes".
+
         p(class: 'text-sm text-gray-500 mt-4') do 
-          "Note: This is an estimate based on a UV index of #{@uv_index} and assumes at least 25% of your body is exposed. Remember to be cautious with sun exposure." 
+          text "Note: This is an estimate based on a UV index of #{@uv_index} and assumes at least 25% of your body is exposed. Remember to be cautious with sun exposure." 
       end
-    end #this end closes the main if @result_time.nil?
+    end # end of main if @result_time.nil?
 
       div(class: 'mt-8 p-6 bg-gray-100 rounded-lg text-left') do
         h3(class: 'text-xl font-bold text-gray-800 mb-2') { "About the Calculation" }
@@ -178,9 +184,9 @@ class SolarDCalculatorPage < Erector::Widget
 
 
             a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block') do
-              'Return to Homepage'
+              text 'Return to Homepage'
             end #This end closes the homepage link
-            
+
           end #THIS END CLOSES THE MAIN CONTAINER DIV
         end # THIS END CLOSES THE BODY TAG.
       end # THIS END CLOSES THE HTML TAG.
@@ -370,7 +376,7 @@ get '/solardcalculator' do
   else
     #Fallback to hardcoded Barabdos coordinates if IP-API fails, which it does when testing in localhost because localhost resolves to 127.0.0.1, based on which IP-API cannot determine a geographic location.
     lat = 13.1939
-    lng = 59.5432
+    lng = -59.5432
   end 
 
   #---TEMPORARY LINES FOR DEBUGGING----------
@@ -393,6 +399,15 @@ if openuv_response.success?
   openuv_data = JSON.parse(openuv_response.body)
   uv_index = openuv_data ['result']['uv']
   # Parse the JSON response from OpenUV to get the UV index.
+
+  #Adding debug lines:
+  puts "===OPENUV DEBUG INFO==="
+  puts "Full response: #{openuv_data.inspect}"
+  puts "UV index value: #{uv_index}"
+  puts "UV index class: #{uv_index.class}"
+  puts "UV index <= 0? #{uv_index <= 0}"
+  puts "Current time: #{Time.now}"
+
   SolarDCalculatorPage.new(uv_index: uv_index, result_time: nil).to_html
   # Render the page using the Erector widget and pass the calculated UV index to it.
   # We pass nil to `result_time` on the GET request so the form is displayed.
