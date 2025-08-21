@@ -66,22 +66,23 @@ class HomePage < Erector::Widget
   def content
     html do
       head do
-        title { 'Welcome to my Website' }
+        title 'Welcome to my Website'
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
       end
-      body(class: 'bg-gray-100 p-8 font-sans antialiased') do
+
+      body do
         div(class: 'container mx-auto bg-white rounded-xl shadow-lg p-6') do
-          h1(class: 'text-4xl font-bold text-gray-800 mb-4') {'Welcome to my Website'}
-          p(class: 'text-lg text-gray-600 mb-6') {'This is where I showcase the small web apps I have built while learning to program in Ruby'}
+          h1(class: 'text-4xl font-bold text-gray-800 mb-4') { text 'Welcome to my Website' }
+          p(class: 'text-lg text-gray-600 mb-6') { text 'This is where I showcase the small web apps I have built while learning to program in Ruby' }
           ul(class: 'space-y-2') do
             #The ul method creates an unordered list <ul> tag. This is a list of items that don't have a specific order, and they are typically displayed with bullet points.
             li do
               #The li method creates a list item <li> tag. Each <li> tag represents a single item in a list. In your code, each link to a calculator is a separate list item.
-              a(href: '/portcharges', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') {'Go to the Port Charges Calculator'} 
+              a(href: '/portcharges', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Port Charges Calculator' } 
               #The a method creates an anchor <a> tag. This tag is used to create a hyperlink, which is a clickable link that takes the user from one page to another.
             end
             li do 
-              a(href: '/solardcalculator', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') {'Go to the Solar D Calculator'}
+              a(href: '/solardcalculator', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Solar D Calculator' }
             end
           end
         end
@@ -152,7 +153,7 @@ class SolarDCalculatorPage < Erector::Widget
 
       else #else we are on the POST request, so display the results
         p(class: 'text-lg font-semibold text-blue-700 mb-6') do 
-          text "To get 1,000 or more IUs of Vitamin D, you'll need to be in the sun for:" 
+          text "To get 1,000 IU of Vitamin D, you'll need to be in the sun for:" 
         end
         p(class: 'text-5xl font-extrabold text-blue-800 mb-6') do 
           text "#{('%.1f' % @result_time).to_f} minutes"
@@ -312,11 +313,19 @@ if @result
       span(class: 'text-2xl font-extrabold') do
         #This line creates an inline <span> element. Since it's an inline element, it appears on the same line as the text that precedes it ("Total Port Charges"). This <span> is used to apply a different style specifically to the number, making it stand out from the rest of the line. The Tailwind classes are applied
         #A <span> is an inline HTML element that is used to apply styling or markup to a small portion of text within a larger block.
-        text "BBD $%.2f" % @result[:total]
+        text " BBD $%.2f" % @result[:total]
        end # Closes the span do block
               end # Closes the div do block
             end # Closes the div do block
           end # Closes the if do block
+
+#Add return to homepage button
+div(class: 'my-8 text-center') do
+  a(href: '/', class: 'inline-block py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
+    text 'Return to Homepage'
+  end
+end
+
         end # Closes the div do block
       end # Closes the body do block
     end # Closes the html do block
@@ -345,6 +354,15 @@ end
 
 #---HOMEPAGE GET ROUTE---------------
 get '/' do
+
+  puts "DEBUG: Homepage route called"
+  widget = HomePage.new
+  html_output = widget.to_html
+  puts "DEBUG: HTML output length #{html_output.length}"
+  puts "DEBUG: First 100 chars: #{html_output[0..100].inspect}"
+
+  content_type :html
+  html_output
   HomePage.new.to_html
 end
 
@@ -564,3 +582,4 @@ post '/calculate' do
   #(result_data): This is the argument you are passing to the initialize method. The entire hash you just created is passed as the result parameter to that method, which then assigns it to the @result instance variable.
   #.to_html: This is the final step. It's an Erector method that takes all the Ruby code you defined in your content method and generates a complete HTML string. This final HTML string is what the web browser will receive and display to the user.
 end
+
