@@ -141,7 +141,7 @@ class SolarDCalculatorPage < Erector::Widget
           end #end of skin type field
 
           p(class: 'text-base text-gray-700 mb-4') do
-            text "Based on your location and the current UV index, let's calculate the amount of time you need in the sun right now to get your recommended daily intake of vitamin D. This estimate assumes you're exposing your face, neck, arms, and legs (like in a T-shirt and shorts)."
+            text "Based on your location and the current UV index, let's calculate the amount of time you need in the sun right now to get an optimal daily intake of vitamin D. This estimate assumes you're exposing your face, neck, arms, and legs (like in a T-shirt and shorts)."
           end #if I do not use {} directly with a string, and instead use do, then text, i need to close the text
 
           button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
@@ -152,7 +152,7 @@ class SolarDCalculatorPage < Erector::Widget
 
       else #else we are on the POST request, so display the results
         p(class: 'text-lg font-semibold text-blue-700 mb-6') do 
-          text "To get 1,000 IUs of Vitamin D, you'll need to be in the sun for:" 
+          text "To get 1,000 or more IUs of Vitamin D, you'll need to be in the sun for:" 
         end
         p(class: 'text-5xl font-extrabold text-blue-800 mb-6') do 
           text "#{('%.1f' % @result_time).to_f} minutes"
@@ -227,11 +227,6 @@ body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-scree
       text 'Port Charges Calculator'
 #Here I am applying Tailwind CSS styles to my erector HTML tags.
     end
-
-#-----------------------------------------------------------------------------
-
-#---PORT CHARGES CALCULATOR---------
-
 
 form(action: '/calculate', method: 'post') do 
   #form(action: '/calculate', method: 'post') do: This line uses the Erector form method to create an HTML <form> tag
@@ -344,24 +339,18 @@ def initialize(result = nil)
 end 
 
 
-#---MAIN SINATRA ROUTES----------------
 
-#Port Charges GET Route
 
-get '/portcharges' do
-  #The code get '/' is a fundamental part of the Sinatra framework and represents the homepage of your web application. It's the first thing a user sees when they visit your site.
-  #The keyword get is an HTTP method. It's the standard way for a web browser to request a resource from a web server. When you type a URL into a browser and press Enter, the browser sends a GET request.
-  #'/portcharges' represents the path of your website. Rather than just get '/', which would represent the root path, this makes the port charges calculator only accessible at /portcharges, leaving the homepage available for other content.
-#The get '/' route is for retrieving or displaying a page. It's what happens when you visit thomasridgeon.com/portcharges. The browser is simply asking the server for the HTML document. The server doesn't expect any data to be sent with this request, just the page itself.
-#The post '/calculate' route is separate. It's good practice to keep the form submission separate, so the form will still send its data to the correct location for calculation, even if the /portcharges page has a different URL.
-#The post '/calculate' route is for submitting data to the server. This happens when the user fills out the form and clicks the "Calculate Charges" button. The form packages up all the user's input and sends it to the URL specified in the form's action attribute.
-  PortChargesCalculatorPage.new.to_html
-  #This line creates a new instance of the PortChargesCalculatorPage class. This is the class you defined using Erector to build the HTML for your page.
-  #.to_html: This method is called on the new PortChargesCalculatorPage object. It's an Erector method that takes all of the Ruby methods you defined in the content block (html, head, body, etc.) and converts them into a single string of valid HTML. This HTML string is what the web browser will receive and render as the homepage.
+#---SINATRA ROUTES----------------
+
+#---HOMEPAGE GET ROUTE---------------
+get '/' do
+  HomePage.new.to_html
 end
 
+#---------------------------------
 
-#---SOLAR D CALCULATOR GET & POST ROUTES-------------
+#---SOLAR D CALCULATOR GET ROUTE-------------
 get '/solardcalculator' do
   ip = request.ip
   location_response = HTTParty.get("http://ip-api.com/json/#{ip}")
@@ -400,7 +389,7 @@ if openuv_response.success?
   uv_index = openuv_data ['result']['uv']
   # Parse the JSON response from OpenUV to get the UV index.
 
-  #Adding debug lines:
+  #MORE DEBUG LINES:
   puts "===OPENUV DEBUG INFO==="
   puts "Full response: #{openuv_data.inspect}"
   puts "UV index value: #{uv_index}"
@@ -419,6 +408,7 @@ else
   #end
 end
 
+#---SOLAR D CALCULATOR POST ROUTE---
 post '/solardcalculator' do
   #This is the POST route that handles the calculation
 
@@ -436,8 +426,6 @@ skin_type = params['skin_type']&.to_i
 if uv_index.nil? || age.nil? || skin_type.nil?
   redirect '/solardcalculator'
 end
-
-
 
 #Fitzpatrick Skin Type Multipliers
 skin_multipliers = {
@@ -478,14 +466,22 @@ end
 #Render the page with the calculation result
 SolarDCalculatorPage.new(uv_index: uv_index, result_time: required_sun_time).to_html
 end
-
-
-
-#Homepage route
-get '/' do
-  HomePage.new.to_html
-end
 #----------------------------------
+
+#---POST CHARGES GET ROUTE------------
+
+get '/portcharges' do
+  #The code get '/' is a fundamental part of the Sinatra framework and represents the homepage of your web application. It's the first thing a user sees when they visit your site.
+  #The keyword get is an HTTP method. It's the standard way for a web browser to request a resource from a web server. When you type a URL into a browser and press Enter, the browser sends a GET request.
+  #'/portcharges' represents the path of your website. Rather than just get '/', which would represent the root path, this makes the port charges calculator only accessible at /portcharges, leaving the homepage available for other content.
+#The get '/' route is for retrieving or displaying a page. It's what happens when you visit thomasridgeon.com/portcharges. The browser is simply asking the server for the HTML document. The server doesn't expect any data to be sent with this request, just the page itself.
+#The post '/calculate' route is separate. It's good practice to keep the form submission separate, so the form will still send its data to the correct location for calculation, even if the /portcharges page has a different URL.
+#The post '/calculate' route is for submitting data to the server. This happens when the user fills out the form and clicks the "Calculate Charges" button. The form packages up all the user's input and sends it to the URL specified in the form's action attribute.
+  PortChargesCalculatorPage.new.to_html
+  #This line creates a new instance of the PortChargesCalculatorPage class. This is the class you defined using Erector to build the HTML for your page.
+  #.to_html: This method is called on the new PortChargesCalculatorPage object. It's an Erector method that takes all of the Ruby methods you defined in the content block (html, head, body, etc.) and converts them into a single string of valid HTML. This HTML string is what the web browser will receive and render as the homepage.
+end
+
 
 #---PORT CHARGES POST ROUTE-----------
 
