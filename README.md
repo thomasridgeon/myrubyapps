@@ -11,6 +11,7 @@ This is a simple web app for customs brokers in Barbados to calculate Barbados P
 
 **Solar D Calculator**
 A web app which tells you the current UV index of the sun and calculates, based on your age and skin type, the amount of time you would have to be outside with at least 25% of your body exposed to synthesize an optimum daily amount of vitamin D (1,000 IU). 
+
 (Note: if testing the Solar D Calculator app in localhost, the IP-API will not be able to get a latitude and longitude based on the localhost IP address, as this is a loopback IP address which points to your own computer and doesn't represent a real goegraphical location. As a result, the OpenUV API will not be able to provide a UV index. So there is a fallback in place which, when testing the app in localhost, will provide the latitude and longitude of Barbados.)
 
 ---

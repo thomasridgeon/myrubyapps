@@ -182,7 +182,7 @@ class SolarDCalculatorPage < Erector::Widget
       div(class: 'mt-8 p-6 bg-gray-100 rounded-lg text-left') do
         h3(class: 'text-xl font-bold text-gray-800 mb-2') { "About the Calculation" }
         p(class: 'text-sm text-gray-700 mb-4') do
-          text "This model is based on research by Dr. Michael Holick, a leading expert on vitamin D. The app calculates the time needed to synthesize 1,000 IU, which is considered an optimal daily level by many health professionals, though it is higher than the official Reccomended Dietary Allowance (RDA) of 600-800 IU. The RDA is the minimum amount needed to prevent deficiency diseases, while the optimal level is a target for broader health benefits."
+          text "This model is based on research by Dr. Michael Holick, a leading expert on vitamin D. The app calculates the time needed to synthesize 1,000 IU, which is considered an optimal daily level by many health professionals, though it is higher than the official Recommended Dietary Allowance (RDA) of 600-800 IU. The RDA is the minimum amount needed to prevent deficiency diseases, while the optimal level is a target for broader health benefits."
         end
 
         p(class: 'text-xs text-gray-500 mt-4') do
@@ -195,7 +195,7 @@ class SolarDCalculatorPage < Erector::Widget
       end # THIS END CLOSES THE DIV FOR "ABOUT THE CALCULATION"
 
 
-            a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block') do
+            a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block mt-6') do
               text 'Return to Homepage'
             end #This end closes the homepage link
 
