@@ -72,17 +72,24 @@ class HomePage < Erector::Widget
 
       body do
         div(class: 'container mx-auto bg-white rounded-xl shadow-lg p-6') do
-          h1(class: 'text-4xl font-bold text-gray-800 mb-4') { text 'Welcome to my Website' }
-          p(class: 'text-lg text-gray-600 mb-6') { text 'This is where I showcase the small web apps I have built while learning to program in Ruby' }
-          ul(class: 'space-y-2') do
+          img(src: '/images/myphoto.jpg', alt: 'Homepage Photo', class: 'mx-auto mb-6 w-48 h-48 rounded-full') 
+          h1(class: 'text-4xl font-bold text-gray-800 mb-4') { text 'Welcome!' }
+          p(class: 'text-lg text-gray-600 mb-6') { text 'My name is Thomas. This is my website where I showcase some of the web apps I have built while learning to program with Ruby' }
+          ul do
             #The ul method creates an unordered list <ul> tag. This is a list of items that don't have a specific order, and they are typically displayed with bullet points.
-            li do
+            li(class: 'mt-4') do
               #The li method creates a list item <li> tag. Each <li> tag represents a single item in a list. In your code, each link to a calculator is a separate list item.
               a(href: '/portcharges', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Port Charges Calculator' } 
               #The a method creates an anchor <a> tag. This tag is used to create a hyperlink, which is a clickable link that takes the user from one page to another.
             end
-            li do 
+            li(class: 'mt-4') do 
               a(href: '/solardcalculator', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Solar D Calculator' }
+            end
+            li(class: 'mt-10') do #adding class: 'mt-8' to the li adds a margin, so there will be a space between my app links and my github link
+              a(href: 'https://github.com/thomasridgeon', target: '_blank', class: 'text-blue-500 font-semibold text-base transition duration-300') do
+                #the github link is an external link, so I add target: '_blank' to make sure the github profile opens in a new tab and my site stays open in the original tab.
+                text "View my GitHub Profile"
+              end
             end
           end
         end
