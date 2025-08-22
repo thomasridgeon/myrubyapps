@@ -70,20 +70,24 @@ class HomePage < Erector::Widget
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
       end
 
-      body do
+      body(class: 'bg-blue-900 min-h-screen') do
         div(class: 'container mx-auto bg-white rounded-xl shadow-lg p-6') do
           img(src: '/images/myphoto.jpg', alt: 'Homepage Photo', class: 'mx-auto mb-6 w-48 h-48 rounded-full') 
+          #Some of Tailwaind's standard image sizes: w-24 h-24 = 96px | w-32 h-32 = 128px | w-40 h-40 = 160px | w-48 h-48 = 192px 
           h1(class: 'text-4xl font-bold text-gray-800 mb-4') { text 'Welcome!' }
-          p(class: 'text-lg text-gray-600 mb-6') { text 'My name is Thomas. This is my website where I showcase some of the web apps I have built while learning to program with Ruby' }
+          p(class: 'text-lg text-gray-600 mb-6') { text 'My name is Thomas. This is a simple website to showcase some of the web apps I have built while learning to program with Ruby' }
+          #Tailwind text size scale: text-xs - 12px | text-sm - 14px | text-base - 16px (default) | text-lg - 18px (what you currently have) | text-xl - 20px
           ul do
             #The ul method creates an unordered list <ul> tag. This is a list of items that don't have a specific order, and they are typically displayed with bullet points.
             li(class: 'mt-4') do
               #The li method creates a list item <li> tag. Each <li> tag represents a single item in a list. In your code, each link to a calculator is a separate list item.
               a(href: '/portcharges', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Port Charges Calculator' } 
               #The a method creates an anchor <a> tag. This tag is used to create a hyperlink, which is a clickable link that takes the user from one page to another.
+            p(class: 'text-base text-gray-600 mb-6') {text 'A simple web app for customs brokers in Barbados to calculate Barbados Port charges'}  
             end
             li(class: 'mt-4') do 
               a(href: '/solardcalculator', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Solar D Calculator' }
+              p(class: 'text-base text-gray-600 mb-6') {text 'A web app which tells you the current UV index of the sun and calculates, based on your age and skin type, the amount of time you would have to be outside with at least 25% of your body exposed to synthesize an optimum daily amount of vitamin D (1,000 IU).'}
             end
             li(class: 'mt-10') do #adding class: 'mt-8' to the li adds a margin, so there will be a space between my app links and my github link
               a(href: 'https://github.com/thomasridgeon', target: '_blank', class: 'text-blue-500 font-semibold text-base transition duration-300') do
