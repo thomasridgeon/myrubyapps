@@ -2,6 +2,8 @@
 
 This is a repository for the ruby apps I create while learning to program.
 
+(Note: the code contains a lot of comments, which are my "study notes").
+
 ---
 
 ## Apps

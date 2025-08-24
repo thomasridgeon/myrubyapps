@@ -2,17 +2,17 @@
 #gem install sinatra-reloader
 
 #To test app in local host:
-#Once my Gemfile and config.ru files are correct, and in my custombrokerapp directory
-#cd into my custombrokerapp directory and run bundle install to download and set up all the required libraries from my Gemfile.
+#Once my Gemfile and config.ru files are correct, and in the myrubyapps directory
+#cd into myrubyapps directory and run bundle install to download and set up all the required libraries from my Gemfile.
 #Then run the command: bundle exec puma to open the app in localhost
 
 #---REQUIREMENTS---------------------------------
 require 'sinatra'
-require 'dotenv/load'
+require 'dotenv/load' #loads environment variables from a .env file 
 require 'httparty' #required for solar calculator to make API calls
 require 'json' #required to parse json responses from the API
 require 'erector'
-require 'pry-byebug'
+require 'pry-byebug' #debugging tool
 require 'sinatra/reloader'
 configure :development do
   register Sinatra::Reloader
@@ -22,44 +22,6 @@ end
 #---API Keys------------------------------------
 OPENUV_API_KEY = ENV['OPENUV_API_KEY']
 #-----------------------------------------------
-
-#---RATES FOR PORT CHARGES----------------------
-RATES = {
-  'fas' => {
-    '20ST' => 1221.98,
-    '40ST' => 2443.96,
-    '40HC' => 2661.32,
-    '20RH' => 1328.93,
-    '40RH' => 2657.85,
-  },
-  'security_fee' => {
-    '20ST' => 155.10,
-    '40ST' => 310.20,
-    '40HC' => 310.20,
-    '20RH' => 105.75,
-    '40RH' => 211.50,
-},
-'hazard' => {
-  '20ST' => 118.68,
-  '40ST' => 259.09,
-  '40HC' => 259.09,
-
-},
-'unstuffing' => {
-  '20ST' => 528.75,
-  '40ST' => 1075.50,
-  '40HC' => 1075.50,
-
-},
-'plugs_daily_rate' => {
-  '20RH' => 115.15,
-  '40RH' => 230.30,
-}
-}
-#In Ruby, => is a special operator most commonly used to define key-value pairs within a hash. It separates the key from its corresponding value.
-#the curly braces {} are used to define a hash. A hash is a fundamental data structure in Ruby that stores data in key-value pairs. It's a perfect way to organize and look up information.
-#
-#----------------------------------------
 
 #---ERECTOR WIDGET FOR HOMEPAGE----------------------
 class HomePage < Erector::Widget 
@@ -103,113 +65,61 @@ class HomePage < Erector::Widget
 end
 #---------------------------------------------
 
-#---ERECTOR WIDGET FOR SOLAR D CALCULATOR PAGE
-class SolarDCalculatorPage < Erector::Widget 
-  needs :uv_index, :result_time
-  #added variables that will hold the numerical values for the UV index from openuv, the current time, and the time calculated for optimal vitamin D 
+#---Homepage Get Route---------------
+get '/' do
 
-  def content
-    html do
-      head do
-        title { 'Solar D Calculator' }
-        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' 
-      end
-      body(class: 'font-sans bg-slate-100 flex justify-center min-h-screen p-5') do
-        div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full text-center') do
-          h1(class: 'text-3xl font-bold text-center text-slate-800 mb-8') {'Solar D Calculator'}
+  puts "DEBUG: Homepage route called"
+  widget = HomePage.new
+  html_output = widget.to_html
+  puts "DEBUG: HTML output length #{html_output.length}"
+  puts "DEBUG: First 100 chars: #{html_output[0..100].inspect}"
 
-          if @result_time.nil? ##if nil, this means we will display the form for the initial GET request 
+  content_type :html
+  html_output
+  HomePage.new.to_html
+end
 
-            if @uv_index.nil? || @uv_index <= 0
-              p(class: 'text-lg text-red-600 mb-6') do
-                text "The UV index is currently too low(#{@uv_index}) to synthesize vitamin D."
-          end #end of UV too low message
-
-        else
-          p(class: 'text-lg font-semibold text-blue-700 mb-6') {'The current UV index at your location is'}
-          p(class: 'text-5xl font-extrabold text-blue-800 mb-6') {@uv_index}
-
-          form(action: '/solardcalculator', method: 'post') do 
-            input(type: 'hidden', name: 'uv_index', value: @uv_index)
-            #here we add a hiden input to pass on the UV index to the POST request
-
-          div(class: 'mb-6') do
-            label('Age', for: 'age', class: 'block text-sm font-medium text-gray-700 mb-2')
-            input(type: 'number', id: 'age', name: 'age', required: true, min: '1', class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500')
-          end #end of age field
-
-          div(class: 'mb-6') do
-            label('Fitzpatrick Skin Type', for: 'skin_type', class: 'block text-sm font-medium text-gray-700 mb-2')
-            select(id: 'skin_type', name: 'skin_type', required: true, class: 'block text-sm font-medium text-gray-700 mb-2') do
-              ## The classes are applied to the SELECT tag, as most browsers ignore them on OPTION tags.
-            option('Select your skin type:', value: '', disabled: true, selected: true)
-              option('Type I: Very Fair (always burns, does not tan)', value: '1')
-              option('Type II: Fair (burns easily, tans poorly)', value: '2')
-              option('Type III: Medium (sometimes burns, tans after initial burn)', value: '3')
-              option('Type IV: Olive (burns minimally, tans easily)', value: '4')
-              option('Type V: Brown (rarely burns, tans darkly easily)', value: '5')
-              option('Type VI: Very Dark (never burns, always tans darkly)', value: '6')
-            end
-          end #end of skin type field
-
-          p(class: 'text-base text-gray-700 mb-4') do
-            text "Based on your location and the current UV index, let's calculate the amount of time you need in the sun right now to get an optimal daily intake of vitamin D. This estimate assumes you're exposing your face, neck, arms, and legs (like in a T-shirt and shorts)."
-          end #if I do not use {} directly with a string, and instead use do, then text, i need to close the text
-
-          button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
-            text "Calculate Time Required in the Sun"
-          end
-        end #end of form
-      end #end of UV check (too low vs form)
-
-      else #else we are on the POST request, so display the results
-        p(class: 'text-lg font-semibold text-blue-700 mb-6') do 
-          text "To get 1,000 IU of Vitamin D, you'll need to be in the sun for:" 
-        end
-        p(class: 'text-5xl font-extrabold text-blue-800 mb-6') do 
-          text "#{('%.1f' % @result_time).to_f} minutes"
-        end
-        #@d_time: This is an instance variable that holds the raw, calculated time in minutes from the post '/solarcalculator'
-        #'%.1f' % @d_time: This is Ruby's string formatting operator. The %.1f is a format specifier that tells Ruby to take the number in @d_time and turn it into a string with exactly one decimal place. 
-        #.to_f: This is a method that converts the formatted string back into a floating-point number. 
-        #"#{...} minutes": This is a string interpolation. The #{} syntax takes the result of the inner expression (the formatted time) and inserts it directly into the string, resulting in a final output like "15.3 minutes".
-
-        p(class: 'text-sm text-gray-500 mt-4') do 
-          text "Note: This is an estimate based on a UV index of #{@uv_index} and assumes at least 25% of your body is exposed. Remember to be cautious with sun exposure." 
-      end
-    end # end of main if @result_time.nil?
-
-      div(class: 'mt-8 p-6 bg-gray-100 rounded-lg text-left') do
-        h3(class: 'text-xl font-bold text-gray-800 mb-2') { "About the Calculation" }
-        p(class: 'text-sm text-gray-700 mb-4') do
-          text "This model is based on research by Dr. Michael Holick, a leading expert on vitamin D. The app calculates the time needed to synthesize 1,000 IU, which is considered an optimal daily level by many health professionals, though it is higher than the official Recommended Dietary Allowance (RDA) of 600-800 IU. The RDA is the minimum amount needed to prevent deficiency diseases, while the optimal level is a target for broader health benefits."
-        end
-
-        p(class: 'text-xs text-gray-500 mt-4') do
-          text "Primary research sources for this model include:"
-          br 
-          text "Holick, M. F. (2004). Vitamin D: A new look at the sunshine vitamin. Dermato-Endocrinology, 29(1), 209-218."
-          br
-          text "Çakmak, T., Yıldız, R., Usta, G., & Yılmaz, A. E. (2021). Holick's Rule Implementation: Calculation of Produced Vitamin D from Sunlight Based on UV Index, Skin Type, and Area of Sunlight Exposure on the Body. International Journal of Energy Research, 45(13), 19576-19590."
-        end
-      end # THIS END CLOSES THE DIV FOR "ABOUT THE CALCULATION"
-
-
-            a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block mt-6') do
-              text 'Return to Homepage'
-            end #This end closes the homepage link
-
-          end #THIS END CLOSES THE MAIN CONTAINER DIV
-        end # THIS END CLOSES THE BODY TAG.
-      end # THIS END CLOSES THE HTML TAG.
-    end # THIS END CLOSES THE CONTENT METHOD.
-  end # THIS END CLOSES THE CLASS
 #---------------------------------------------
 
+#---PORT CHARGES CALCULATOR-------------------
 
-#---ERECTOR WIDGET FOR PORT CHARGES CALCULATOR-----
+#---Rates for Port Charges----------------------
+RATES = {
+  'fas' => {
+    '20ST' => 1221.98,
+    '40ST' => 2443.96,
+    '40HC' => 2661.32,
+    '20RH' => 1328.93,
+    '40RH' => 2657.85,
+  },
+  'security_fee' => {
+    '20ST' => 155.10,
+    '40ST' => 310.20,
+    '40HC' => 310.20,
+    '20RH' => 105.75,
+    '40RH' => 211.50,
+},
+'hazard' => {
+  '20ST' => 118.68,
+  '40ST' => 259.09,
+  '40HC' => 259.09,
 
+},
+'unstuffing' => {
+  '20ST' => 528.75,
+  '40ST' => 1075.50,
+  '40HC' => 1075.50,
 
+},
+'plugs_daily_rate' => {
+  '20RH' => 115.15,
+  '40RH' => 230.30,
+}
+}
+#In Ruby, => is a special operator most commonly used to define key-value pairs within a hash. It separates the key from its corresponding value.
+#the curly braces {} are used to define a hash. A hash is a fundamental data structure in Ruby that stores data in key-value pairs. It's a perfect way to organize and look up information.
+
+#---Port Charges Calculator Widget-----
 #With the Erector gem, instead of writing a big block of HTML, you define your page's structure and content using Ruby methods. This lets you stay in the Ruby world you're more comfortable with.
 
 #Use an Erector class to define the HTML with Tailwind CSS classes
@@ -234,10 +144,8 @@ class PortChargesCalculatorPage < Erector::Widget
 
 body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-screen p-5') do
   div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full') do
-    #The key: 'value' syntax with the colon is used for passing named arguments to a method. You see this with the Erector gem: div(class: '...') here, class: is a named argument for the div method.
     h1(class:'text-3xl font-bold text-center text-slate-800 mb-8') do
       text 'Port Charges Calculator'
-#Here I am applying Tailwind CSS styles to my erector HTML tags.
     end
 
 form(action: '/calculate', method: 'post') do 
@@ -337,11 +245,11 @@ div(class: 'my-8 text-center') do
   end
 end
 
-        end # Closes the div do block
-      end # Closes the body do block
-    end # Closes the html do block
-  end # Closes the def content do block
-end # Closes the class do block
+        end 
+      end 
+    end 
+  end 
+end 
   
   
 def initialize(result = nil)
@@ -359,145 +267,7 @@ def initialize(result = nil)
 end 
 
 
-
-
-#---SINATRA ROUTES----------------
-
-#---HOMEPAGE GET ROUTE---------------
-get '/' do
-
-  puts "DEBUG: Homepage route called"
-  widget = HomePage.new
-  html_output = widget.to_html
-  puts "DEBUG: HTML output length #{html_output.length}"
-  puts "DEBUG: First 100 chars: #{html_output[0..100].inspect}"
-
-  content_type :html
-  html_output
-  HomePage.new.to_html
-end
-
-#---------------------------------
-
-#---SOLAR D CALCULATOR GET ROUTE-------------
-get '/solardcalculator' do
-  ip = request.ip
-  location_response = HTTParty.get("http://ip-api.com/json/#{ip}")
-  # Make an API call to ip-api to get the location data.
-  # No API key is required.
-
-  if location_response.success? && JSON.parse(location_response.body)['status'] == 'success'
-  location_data = JSON.parse(location_response.body)
-  lat = location_data['lat']
-  lng = location_data['lon']
-  # Parse the JSON response from ip-api to get the latitude and longitude.
-  else
-    #Fallback to hardcoded Barabdos coordinates if IP-API fails, which it does when testing in localhost because localhost resolves to 127.0.0.1, based on which IP-API cannot determine a geographic location.
-    lat = 13.1939
-    lng = -59.5432
-  end 
-
-  #---TEMPORARY LINES FOR DEBUGGING----------
-  puts "Latitude: #{lat}"
-  puts "Longitude: #{lng}"
-  #------------------------------------------
-
-  openuv_response = HTTParty.get(
-    "https://api.openuv.io/api/v1/uv?lat=#{lat}&lng=#{lng}",
-    headers: { 'x-access-token' => OPENUV_API_KEY }
-  )
-
-#---MORE DEBUGGING---
-puts "OpenUV API Response Status: #{openuv_response.code}"
-puts "OpenUV API Response Body: #{openuv_response.body}"
-#-------------------
-
-if openuv_response.success?
-  #Adds error handling. Check if the OpenUV API call was successful before trying to parse the body.
-  openuv_data = JSON.parse(openuv_response.body)
-  uv_index = openuv_data ['result']['uv']
-  # Parse the JSON response from OpenUV to get the UV index.
-
-  #MORE DEBUG LINES:
-  puts "===OPENUV DEBUG INFO==="
-  puts "Full response: #{openuv_data.inspect}"
-  puts "UV index value: #{uv_index}"
-  puts "UV index class: #{uv_index.class}"
-  puts "UV index <= 0? #{uv_index <= 0}"
-  puts "Current time: #{Time.now}"
-
-  SolarDCalculatorPage.new(uv_index: uv_index, result_time: nil).to_html
-  # Render the page using the Erector widget and pass the calculated UV index to it.
-  # We pass nil to `result_time` on the GET request so the form is displayed.
-else
-  "Error: Could not retrieve UV data from OpenUV API. Please check your API key or try again later"
-  end
-#else
-  #"Error: Could not retrieve location data from IP-API" - No need for this error message anymore, since we know that during testing with localhost, IP-API will not work to get a geographic location.
-  #end
-end
-
-#---SOLAR D CALCULATOR POST ROUTE---
-post '/solardcalculator' do
-  #This is the POST route that handles the calculation
-
-  puts "POST params: #{params.inspect}" 
-  #Confirm the POST is being hit and parameters are passed correctly. Watch the console while the form is submitted.
-
-uv_index = params['uv_index']&.to_f
-age = params['age']&.to_i
-skin_type = params['skin_type']&.to_i
-#Here we get the variables from the form submission
-#&.to_f and &.to_i: These are used to safely call a method on an object. The &. operator checks if the object is nil before trying to call the method. If the object is nil, it just returns nil instead of causing an error.
-
-# Check if any of the required parameters are missing (nil).
-# If so, handle the error gracefully instead of crashing.
-if uv_index.nil? || age.nil? || skin_type.nil?
-  redirect '/solardcalculator'
-end
-
-#Fitzpatrick Skin Type Multipliers
-skin_multipliers = {
-1 => 0.8,
-2 => 1.0,
-3 => 1.25,
-4 => 1.6,
-5 => 2.5,
-6 => 7.5
-}
-
-#Age-Related Scaling
-age_factor = 1.0
-if age >= 60
-  #For ages 60+, reduction to a factor of 0.5 or less.
-  #We use a linear decrease from 0.75 at age 60 to 0.5 at age 80
-  if age > 80
-    age_factor = 0.5
-  else
-    age_factor = 0.75 - ((age - 60) * (0.25/ 20.0))
-  end
-elsif age > 30
-  #For ages 30-60, a progressive reduction to 0.75 by age 60
-  age_factor = 1.0 - ((age - 30) * (0.25 / 30.0))
-end
-
-if uv_index.nil? || uv_index <= 0
-  required_sun_time = nil
-  #"If there’s no UV index, or if it’s nighttime (UV = 0), don’t try to calculate — just set required_sun_time = nil."
-
-else
-
-#Calculate the required sun exposure time in minutes
-#Formula: Time (minutes) = (10 minutes) * Fitzpatrick Multiplier) * (Age Factor) * (7/ Current UV Index)
-required_sun_time =  10.0 * skin_multipliers[skin_type] * age_factor * (7.0 / uv_index)
-end
-
-#Render the page with the calculation result
-SolarDCalculatorPage.new(uv_index: uv_index, result_time: required_sun_time).to_html
-end
-#----------------------------------
-
-#---POST CHARGES GET ROUTE------------
+#---Port Charges Get Route------------
 
 get '/portcharges' do
   #The code get '/' is a fundamental part of the Sinatra framework and represents the homepage of your web application. It's the first thing a user sees when they visit your site.
@@ -512,7 +282,7 @@ get '/portcharges' do
 end
 
 
-#---PORT CHARGES POST ROUTE-----------
+#---Port Charges Post Route-----------
 
 post '/calculate' do
 #This section of code is a Sinatra route that handles the form submission and performs the initial part of the calculation. It's the logic that runs on the server after a user clicks the "Calculate Charges" button on the form.
@@ -593,4 +363,230 @@ post '/calculate' do
   #(result_data): This is the argument you are passing to the initialize method. The entire hash you just created is passed as the result parameter to that method, which then assigns it to the @result instance variable.
   #.to_html: This is the final step. It's an Erector method that takes all the Ruby code you defined in your content method and generates a complete HTML string. This final HTML string is what the web browser will receive and display to the user.
 end
+
+#-----------------------------------------------
+
+
+
+#---Solar D Calculator Widget------------------
+class SolarDCalculatorPage < Erector::Widget 
+  needs :uv_index, :result_time
+  #added variables that will hold the numerical values for the UV index from openuv, the current time, and the time calculated for optimal vitamin D 
+
+  def content
+    html do
+      head do
+        title { 'Solar D Calculator' }
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' 
+      end
+      body(class: 'font-sans bg-slate-100 flex justify-center min-h-screen p-5') do
+        div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full text-center') do
+          h1(class: 'text-3xl font-bold text-center text-slate-800 mb-8') {'Solar D Calculator'}
+
+          if @result_time.nil? ##if nil, this means we will display the form for the initial GET request 
+
+            if @uv_index.nil? || @uv_index <= 0
+              p(class: 'text-lg text-red-600 mb-6') do
+                text "The UV index is currently too low(#{@uv_index}) to synthesize vitamin D."
+          end #end of UV too low message
+
+        else
+          p(class: 'text-lg font-semibold text-blue-700 mb-6') {'The current UV index at your location is'}
+          p(class: 'text-5xl font-extrabold text-blue-800 mb-6') {@uv_index}
+
+          form(action: '/solardcalculator', method: 'post') do 
+            input(type: 'hidden', name: 'uv_index', value: @uv_index)
+            #here we add a hiden input to pass on the UV index to the POST request
+
+          div(class: 'mb-6') do
+            label('Age', for: 'age', class: 'block text-sm font-medium text-gray-700 mb-2')
+            input(type: 'number', id: 'age', name: 'age', required: true, min: '1', class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500')
+          end #end of age field
+
+          div(class: 'mb-6') do
+            label('Fitzpatrick Skin Type', for: 'skin_type', class: 'block text-sm font-medium text-gray-700 mb-2')
+            select(id: 'skin_type', name: 'skin_type', required: true, class: 'block text-sm font-medium text-gray-700 mb-2') do
+              ## The classes are applied to the SELECT tag, as most browsers ignore them on OPTION tags.
+            option('Select your skin type:', value: '', disabled: true, selected: true)
+              option('Type I: Very Fair (always burns, does not tan)', value: '1')
+              option('Type II: Fair (burns easily, tans poorly)', value: '2')
+              option('Type III: Medium (sometimes burns, tans after initial burn)', value: '3')
+              option('Type IV: Olive (burns minimally, tans easily)', value: '4')
+              option('Type V: Brown (rarely burns, tans darkly easily)', value: '5')
+              option('Type VI: Very Dark (never burns, always tans darkly)', value: '6')
+            end
+          end #end of skin type field
+
+          p(class: 'text-base text-gray-700 mb-4') do
+            text "Based on your location and the current UV index, let's calculate the amount of time you need in the sun right now to get an optimal daily intake of vitamin D. This estimate assumes you're exposing your face, neck, arms, and legs (like in a T-shirt and shorts)."
+          end #if I do not use {} directly with a string, and instead use do, then text, i need to close the text
+
+          button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
+            text "Calculate Time Required in the Sun"
+          end
+        end #end of form
+      end #end of UV check (too low vs form)
+
+      else #else we are on the POST request, so display the results
+        p(class: 'text-lg font-semibold text-blue-700 mb-6') do 
+          text "To get 1,000 IU of Vitamin D, you'll need to be in the sun for:" 
+        end
+        p(class: 'text-5xl font-extrabold text-blue-800 mb-6') do 
+          text "#{('%.1f' % @result_time).to_f} minutes"
+        end
+        #@d_time: This is an instance variable that holds the raw, calculated time in minutes from the post '/solarcalculator'
+        #'%.1f' % @d_time: This is Ruby's string formatting operator. The %.1f is a format specifier that tells Ruby to take the number in @d_time and turn it into a string with exactly one decimal place. 
+        #.to_f: This is a method that converts the formatted string back into a floating-point number. 
+        #"#{...} minutes": This is a string interpolation. The #{} syntax takes the result of the inner expression (the formatted time) and inserts it directly into the string, resulting in a final output like "15.3 minutes".
+
+        p(class: 'text-sm text-gray-500 mt-4') do 
+          text "Note: This is an estimate based on a UV index of #{@uv_index} and assumes at least 25% of your body is exposed. Remember to be cautious with sun exposure." 
+      end
+    end # end of main if @result_time.nil?
+
+      div(class: 'mt-8 p-6 bg-gray-100 rounded-lg text-left') do
+        h3(class: 'text-xl font-bold text-gray-800 mb-2') { "About the Calculation" }
+        p(class: 'text-sm text-gray-700 mb-4') do
+          text "This model is based on research by Dr. Michael Holick, a leading expert on vitamin D. The app calculates the time needed to synthesize 1,000 IU, which is considered an optimal daily level by many health professionals, though it is higher than the official Recommended Dietary Allowance (RDA) of 600-800 IU. The RDA is the minimum amount needed to prevent deficiency diseases, while the optimal level is a target for broader health benefits."
+        end
+
+        p(class: 'text-xs text-gray-500 mt-4') do
+          text "Primary research sources for this model include:"
+          br 
+          text "Holick, M. F. (2004). Vitamin D: A new look at the sunshine vitamin. Dermato-Endocrinology, 29(1), 209-218."
+          br
+          text "Çakmak, T., Yıldız, R., Usta, G., & Yılmaz, A. E. (2021). Holick's Rule Implementation: Calculation of Produced Vitamin D from Sunlight Based on UV Index, Skin Type, and Area of Sunlight Exposure on the Body. International Journal of Energy Research, 45(13), 19576-19590."
+        end
+      end 
+
+
+            a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block mt-6') do
+              text 'Return to Homepage'
+            end #This end closes the homepage link
+
+          end 
+        end 
+      end 
+    end 
+  end 
+#---------------------------------------------
+
+#---Solar D Calculator Get Route-------------
+get '/solardcalculator' do
+  ip = request.ip
+  location_response = HTTParty.get("http://ip-api.com/json/#{ip}")
+  # Make an API call to ip-api to get the location data.
+  # No API key is required.
+
+  if location_response.success? && JSON.parse(location_response.body)['status'] == 'success'
+  location_data = JSON.parse(location_response.body)
+  lat = location_data['lat']
+  lng = location_data['lon']
+  # Parse the JSON response from ip-api to get the latitude and longitude.
+  else
+    #Fallback to hardcoded Barabdos coordinates if IP-API fails, which it does when testing in localhost because localhost resolves to 127.0.0.1, based on which IP-API cannot determine a geographic location.
+    lat = 13.1939
+    lng = -59.5432
+  end 
+
+  #---Debugging------------------------------
+  puts "Latitude: #{lat}"
+  puts "Longitude: #{lng}"
+  #------------------------------------------
+
+  openuv_response = HTTParty.get(
+    "https://api.openuv.io/api/v1/uv?lat=#{lat}&lng=#{lng}",
+    headers: { 'x-access-token' => OPENUV_API_KEY }
+  )
+
+#---More debugging---------------------------
+puts "OpenUV API Response Status: #{openuv_response.code}"
+puts "OpenUV API Response Body: #{openuv_response.body}"
+#-------------------
+
+if openuv_response.success?
+  #Adds error handling. Check if the OpenUV API call was successful before trying to parse the body.
+  openuv_data = JSON.parse(openuv_response.body)
+  uv_index = openuv_data ['result']['uv']
+  # Parse the JSON response from OpenUV to get the UV index.
+
+  #---Even more debugging---------------
+  puts "===OPENUV DEBUG INFO==="
+  puts "Full response: #{openuv_data.inspect}"
+  puts "UV index value: #{uv_index}"
+  puts "UV index class: #{uv_index.class}"
+  puts "UV index <= 0? #{uv_index <= 0}"
+  puts "Current time: #{Time.now}"
+
+  SolarDCalculatorPage.new(uv_index: uv_index, result_time: nil).to_html
+  # Render the page using the Erector widget and pass the calculated UV index to it.
+  # We pass nil to `result_time` on the GET request so the form is displayed.
+else
+  "Error: Could not retrieve UV data from OpenUV API. Please check your API key or try again later"
+  end
+#else
+  #"Error: Could not retrieve location data from IP-API" - No need for this error message anymore, since we know that during testing with localhost, IP-API will not work to get a geographic location.
+  #end
+end
+#---------------------------------------------------
+
+#---Solar D Calculator Post Route--------------------
+post '/solardcalculator' do
+  #This is the POST route that handles the calculation
+
+  puts "POST params: #{params.inspect}" 
+  #Confirm the POST is being hit and parameters are passed correctly. Watch the console while the form is submitted.
+
+uv_index = params['uv_index']&.to_f
+age = params['age']&.to_i
+skin_type = params['skin_type']&.to_i
+#Here we get the variables from the form submission
+#&.to_f and &.to_i: These are used to safely call a method on an object. The &. operator checks if the object is nil before trying to call the method. If the object is nil, it just returns nil instead of causing an error.
+
+# Check if any of the required parameters are missing (nil).
+# If so, handle the error gracefully instead of crashing.
+if uv_index.nil? || age.nil? || skin_type.nil?
+  redirect '/solardcalculator'
+end
+
+#Fitzpatrick Skin Type Multipliers
+skin_multipliers = {
+1 => 0.8,
+2 => 1.0,
+3 => 1.25,
+4 => 1.6,
+5 => 2.5,
+6 => 7.5
+}
+
+#Age-Related Scaling
+age_factor = 1.0
+if age >= 60
+  #For ages 60+, reduction to a factor of 0.5 or less.
+  #We use a linear decrease from 0.75 at age 60 to 0.5 at age 80
+  if age > 80
+    age_factor = 0.5
+  else
+    age_factor = 0.75 - ((age - 60) * (0.25/ 20.0))
+  end
+elsif age > 30
+  #For ages 30-60, a progressive reduction to 0.75 by age 60
+  age_factor = 1.0 - ((age - 30) * (0.25 / 30.0))
+end
+
+if uv_index.nil? || uv_index <= 0
+  required_sun_time = nil
+  #"If there’s no UV index, or if it’s nighttime (UV = 0), don’t try to calculate — just set required_sun_time = nil."
+
+else
+
+#Calculate the required sun exposure time in minutes
+#Formula: Time (minutes) = (10 minutes) * Fitzpatrick Multiplier) * (Age Factor) * (7/ Current UV Index)
+required_sun_time =  10.0 * skin_multipliers[skin_type] * age_factor * (7.0 / uv_index)
+end
+
+#Render the page with the calculation result
+SolarDCalculatorPage.new(uv_index: uv_index, result_time: required_sun_time).to_html
+end
+#----------------------------------
 
