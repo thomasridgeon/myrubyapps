@@ -73,5 +73,8 @@ You can now open your browser and go to the link provided in your terminal, such
 
 To navigate to the Port Charges Calculator, use the /portcharges path http://0.0.0.0:9292/portcharges
 
+To navigate to the Solar D Calculator, use the /solardcalculator path http://0.0.0.0:9292/solardcalculator 
+
+
 
 

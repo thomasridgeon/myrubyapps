@@ -23,63 +23,85 @@ end
 OPENUV_API_KEY = ENV['OPENUV_API_KEY']
 #-----------------------------------------------
 
-#---ERECTOR WIDGET FOR HOMEPAGE----------------------
-class HomePage < Erector::Widget 
+
+#---HOMEPAGE-----------------------------------
+
+#---Home Page Widget----------------------------
+class HomePage < Erector::Widget
+    #defines a new class HomePage which inherits from the superclass Erector::Widget. :: signifies that the Widget class lives inside the Erector module. 
+    #So because of inheritance, the HomePage is an Erector::Widget, and therefore gets all the methods and functionality of Erector::Widget.
+  
   def content
+    rawtext '<!DOCTYPE html>'
     html do
       head do
-        title 'Welcome to my Website'
+        script(src: '//unpkg.com/alpinejs', defer: true) {}
+        #src: '//unpkg.com/alpinejs': This sets the src attribute of the script tag. The value //unpkg.com/alpinejs is a URL that points to the Alpine.js library hosted on a content delivery network (CDN). Using // (a protocol-relative URL) means the browser will automatically use http: or https: depending on the current page's protocol.
+        #defer: true: This sets the defer attribute. When a script has the defer attribute, the browser will download the script file in the background while it continues to parse the HTML document. The script will only execute after the entire document has been fully parsed. This is important because it prevents the script from blocking the rendering of your page, leading to a faster and more responsive user experience.
+        #{}: This empty block is where you would normally place the content of the script tag (i.e., inline JavaScript code). Since this script tag is only for including an external file, the block is left empty.
+        title "Hey I'm Thomas!"
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
-      end
+      end #closes head do
 
-      body(class: 'bg-blue-900 min-h-screen') do
-        div(class: 'container mx-auto bg-white rounded-xl shadow-lg p-6') do
-          img(src: '/images/myphoto.jpg', alt: 'Homepage Photo', class: 'mx-auto mb-6 w-48 h-48 rounded-full') 
-          #Some of Tailwaind's standard image sizes: w-24 h-24 = 96px | w-32 h-32 = 128px | w-40 h-40 = 160px | w-48 h-48 = 192px 
-          h1(class: 'text-4xl font-bold text-gray-800 mb-4') { text 'Welcome!' }
-          p(class: 'text-lg text-gray-600 mb-6') { text 'My name is Thomas. This is a simple website to showcase some of the web apps I have built while learning to program with Ruby' }
-          #Tailwind text size scale: text-xs - 12px | text-sm - 14px | text-base - 16px (default) | text-lg - 18px (what you currently have) | text-xl - 20px
-          ul do
-            #The ul method creates an unordered list <ul> tag. This is a list of items that don't have a specific order, and they are typically displayed with bullet points.
-            li(class: 'mt-4') do
-              #The li method creates a list item <li> tag. Each <li> tag represents a single item in a list. In your code, each link to a calculator is a separate list item.
-              a(href: '/portcharges', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Port Charges Calculator' } 
-              #The a method creates an anchor <a> tag. This tag is used to create a hyperlink, which is a clickable link that takes the user from one page to another.
-            p(class: 'text-base text-gray-600 mb-6') {text 'A simple web app for customs brokers in Barbados to calculate Barbados Port charges'}  
+      body(class: 'bg-black text-white font-sans') do
+        div(class: 'max-w-2xl mx-auto p-6 flex flex-col items-center') do
+            #max-width: 42rem; (which is typically 672px). This is the most important part for readability. It prevents your text from stretching all the way across a wide monitor, creating an overly long line that is difficult to read. It creates a comfortable, column-like width for your text.
+            #Padding: 6 creates breathing room inside the div, between the edges of this container and all the contents inside of it. On mobile viewing, this ensures the text doesn't touch the very edge of the screen. 
+
+            #---Dropdown section----------
+            #using Tailwind CSS's own classes combined with a simple alpine.js library for handling the state. Alpine.js is a minimal JavaScript library which can be used for this kind of simple interactivity I am going for with a drop down menu. It's designed to be lightweight and easy to use directly in your HTML.
+            div(class: 'relative px-4', 'x-data': '{open: false}', 'x-on:mouseenter': 'open = true', 'x-on:mouseleave': 'open = false') do
+            #x-data': '{open: false}': This is an Alpine.js directive. This directive initializes a new Alpine component on this <div>.
+            #'{open: false}': This is a JavaScript object that defines the component's state. It creates a variable named open and initializes its value to false. This variable acts as a toggle: true means the dropdown is open, and false means it's closed. Other Alpine directives within this <div> (like x-on:click and x-show) will use and change the value of this open variable to control the dropdown's behavior.
+
+              #Clickable image button
+              button(class: 'focus:outline-none bg-transparent border-none p-0') do 
+                img(src: '/images/myphoto.jpg', alt: 'Homepage Photo', class: 'mt-20 w-52 h-52 cursor-pointer border-4 border-white') 
+            end 
+
+            p(class: 'text-sm text gray-400 mb-16 text-center') do
+              text "Menu"
             end
-            li(class: 'mt-4') do 
-              a(href: '/solardcalculator', class: 'text-blue-500 hover:text-blue-700 font-semibold text-lg transition duration-300') { text 'Go to the Solar D Calculator' }
-              p(class: 'text-base text-gray-600 mb-6') {text 'A web app which tells you the current UV index of the sun and calculates, based on your age and skin type, the amount of time you would have to be outside with at least 25% of your body exposed to synthesize an optimum daily amount of vitamin D (1,000 IU).'}
-            end
-            li(class: 'mt-10') do #adding class: 'mt-8' to the li adds a margin, so there will be a space between my app links and my github link
-              a(href: 'https://github.com/thomasridgeon', target: '_blank', class: 'text-blue-500 font-semibold text-base transition duration-300') do
-                #the github link is an external link, so I add target: '_blank' to make sure the github profile opens in a new tab and my site stays open in the original tab.
-                text "View my GitHub Profile"
+
+            #hidden menu (initially hidden with 'hidden class')
+              div('x-show': 'open', 'x-transition': '', class: 'absolute right-full top-1/2 transform -translate-y-1/2 w-48 bg-white rounded-md shadow-lg py-2 z-50') do
+              #x-show: This directive tells Alpine.js to conditionally show or hide this element.
+              #'open': This refers to the open variable you defined in the parent element's x-data directive. When the open variable is true, Alpine.js removes the display: none; style, making the <div> visible. When open is false, Alpine.js applies display: none;, which completely hides the <div> and its contents from the page.
+              # x-transition: This directive enables a smooth transition effect when the element is shown or hidden. Instead of abruptly appearing or disappearing, the element will fade in and out. The empty string '' indicates that you want to use the default fade transition provided by Alpine.js. You can also specify different transition classes for more advanced effects.  
+                a(href: '/about', class: 'block px-4 py-2 text-black hover:bg-gray-100') { text 'About Me'}
+                a(href: '/projects', class: 'block px-4 py-2 text-black hover:bg-gray-100') { text 'Projects'}
+                a(href: '/contact', class: 'block px-4 py-2 text-black hover:bg-gray-100') { text 'Contact'}
               end
-            end
-          end
-        end
-      end
-    end
-  end
-end
-#---------------------------------------------
+            end  
+            #---End drop down section-----
 
-#---Homepage Get Route---------------
+          h1(class: 'text-3xl font-bold mb-6') do #h1 only needs a bottom margin to space itself from the paragraphs below.
+            text "Hey, I'm Thomas!"  
+          end #closes h1 do
+            
+
+#The Tailwind text size scale (from small to large): xs -> sm -> base -> lg -> xl -> 2xl -> 3xl -> 4xl -> 5xl -> 6xl -> 7xl -> 8xl -> 9xl
+#p-6 adds padding to all sides | pt-6 adds padding to the top only | pr-4 adds padding to right only | pb-6 adds padding to the bottom only | pl-6 adds padding to the left only | px-6 adds padding to the left and right | py-6 adds padding to the top and bottom.
+
+          p(class: 'text-lg mb-4') do #paragraphs only need bottom margin to space themselves from the next element. 
+            text "This is my website I coded from scratch where you can read a bit about me and try out some of the webapps I created while learning to program in Ruby."
+          end #closes p do
+        end #closes div do
+
+      end #closes body
+    end #closes html
+  end #closes content
+end #closes homepage class
+
+                 
+#---Homepage Get Route---------------------------
 get '/' do
-
-  puts "DEBUG: Homepage route called"
-  widget = HomePage.new
-  html_output = widget.to_html
-  puts "DEBUG: HTML output length #{html_output.length}"
-  puts "DEBUG: First 100 chars: #{html_output[0..100].inspect}"
-
-  content_type :html
-  html_output
   HomePage.new.to_html
 end
+#------------------------------------------------
 
-#---------------------------------------------
+#---
+
 
 #---PORT CHARGES CALCULATOR-------------------
 
