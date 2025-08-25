@@ -33,59 +33,69 @@ class HomePage < Erector::Widget
   
   def content
     rawtext '<!DOCTYPE html>'
+    #By including <!DOCTYPE html>, you ensure the browser uses the latest and most consistent rendering rules for modern HTML.
     html do
       head do
-        script(src: '//unpkg.com/alpinejs', defer: true) {}
-        #src: '//unpkg.com/alpinejs': This sets the src attribute of the script tag. The value //unpkg.com/alpinejs is a URL that points to the Alpine.js library hosted on a content delivery network (CDN). Using // (a protocol-relative URL) means the browser will automatically use http: or https: depending on the current page's protocol.
-        #defer: true: This sets the defer attribute. When a script has the defer attribute, the browser will download the script file in the background while it continues to parse the HTML document. The script will only execute after the entire document has been fully parsed. This is important because it prevents the script from blocking the rendering of your page, leading to a faster and more responsive user experience.
-        #{}: This empty block is where you would normally place the content of the script tag (i.e., inline JavaScript code). Since this script tag is only for including an external file, the block is left empty.
+        
+        link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
+        link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
         title "Hey I'm Thomas!"
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+
+        #CSS code to add custom font
+        style do
+          rawtext <<-CSS
+            html, body {
+              font-family: 'Montserrat', sans-serif !important;
+            }
+          CSS
+
+        end 
       end #closes head do
 
-      body(class: 'bg-black text-white font-sans') do
-        div(class: 'max-w-2xl mx-auto p-6 flex flex-col items-center') do
+      body(class: 'bg-black text-white') do
+
+        #---Nav bar---
+        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+
+          #Left Side
+          div do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+              text "Home"
+            end
+          end
+        
+          #Right Side
+          div(class: 'space-x-6') do
+            a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text "About Me"}
+            a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text "Projects"}
+          end
+        end
+        #----------------
+
+        #---Main content-----
+
+        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
             #max-width: 42rem; (which is typically 672px). This is the most important part for readability. It prevents your text from stretching all the way across a wide monitor, creating an overly long line that is difficult to read. It creates a comfortable, column-like width for your text.
             #Padding: 6 creates breathing room inside the div, between the edges of this container and all the contents inside of it. On mobile viewing, this ensures the text doesn't touch the very edge of the screen. 
 
-            #---Dropdown section----------
-            #using Tailwind CSS's own classes combined with a simple alpine.js library for handling the state. Alpine.js is a minimal JavaScript library which can be used for this kind of simple interactivity I am going for with a drop down menu. It's designed to be lightweight and easy to use directly in your HTML.
-            div(class: 'relative px-4', 'x-data': '{open: false}', 'x-on:mouseenter': 'open = true', 'x-on:mouseleave': 'open = false') do
-            #x-data': '{open: false}': This is an Alpine.js directive. This directive initializes a new Alpine component on this <div>.
-            #'{open: false}': This is a JavaScript object that defines the component's state. It creates a variable named open and initializes its value to false. This variable acts as a toggle: true means the dropdown is open, and false means it's closed. Other Alpine directives within this <div> (like x-on:click and x-show) will use and change the value of this open variable to control the dropdown's behavior.
+          
 
-              #Clickable image button
-              button(class: 'focus:outline-none bg-transparent border-none p-0') do 
-                img(src: '/images/myphoto.jpg', alt: 'Homepage Photo', class: 'mt-20 w-52 h-52 cursor-pointer border-4 border-white') 
-            end 
-
-            p(class: 'text-sm text gray-400 mb-16 text-center') do
-              text "Menu"
-            end
-
-            #hidden menu (initially hidden with 'hidden class')
-              div('x-show': 'open', 'x-transition': '', class: 'absolute right-full top-1/2 transform -translate-y-1/2 w-48 bg-white rounded-md shadow-lg py-2 z-50') do
-              #x-show: This directive tells Alpine.js to conditionally show or hide this element.
-              #'open': This refers to the open variable you defined in the parent element's x-data directive. When the open variable is true, Alpine.js removes the display: none; style, making the <div> visible. When open is false, Alpine.js applies display: none;, which completely hides the <div> and its contents from the page.
-              # x-transition: This directive enables a smooth transition effect when the element is shown or hidden. Instead of abruptly appearing or disappearing, the element will fade in and out. The empty string '' indicates that you want to use the default fade transition provided by Alpine.js. You can also specify different transition classes for more advanced effects.  
-                a(href: '/about', class: 'block px-4 py-2 text-black hover:bg-gray-100') { text 'About Me'}
-                a(href: '/projects', class: 'block px-4 py-2 text-black hover:bg-gray-100') { text 'Projects'}
-                a(href: '/contact', class: 'block px-4 py-2 text-black hover:bg-gray-100') { text 'Contact'}
-              end
-            end  
-            #---End drop down section-----
-
-          h1(class: 'text-3xl font-bold mb-6') do #h1 only needs a bottom margin to space itself from the paragraphs below.
-            text "Hey, I'm Thomas!"  
+          h1(class: 'text-5xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
+            text "Hey!"  
           end #closes h1 do
             
 
 #The Tailwind text size scale (from small to large): xs -> sm -> base -> lg -> xl -> 2xl -> 3xl -> 4xl -> 5xl -> 6xl -> 7xl -> 8xl -> 9xl
 #p-6 adds padding to all sides | pt-6 adds padding to the top only | pr-4 adds padding to right only | pb-6 adds padding to the bottom only | pl-6 adds padding to the left only | px-6 adds padding to the left and right | py-6 adds padding to the top and bottom.
 
-          p(class: 'text-lg mb-4') do #paragraphs only need bottom margin to space themselves from the next element. 
-            text "This is my website I coded from scratch where you can read a bit about me and try out some of the webapps I created while learning to program in Ruby."
+          p(class: 'text-2xl mb-8') do #paragraphs only need bottom margin to space themselves from the next element. 
+            text "My name is Thomas Ridgeon"
           end #closes p do
+          p(class: 'text-base mb-4') do
+            text "This is my website I coded from scratch where you can read a bit about me and try out some of the webapps I created while learning to program."
+          end
         end #closes div do
 
       end #closes body
@@ -100,7 +110,154 @@ get '/' do
 end
 #------------------------------------------------
 
-#---
+#---ABOUT PAGE-----------------------------------
+#---About page erector widget-----------
+class AboutPage < Erector::Widget
+  def content
+    rawtext '<!DOCTYPE html>'
+    html do
+      head do
+        title "About Me - Thomas Ridgeon"
+
+        link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
+        link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+        title "Hey I'm Thomas!"
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+
+        #CSS code to add custom font
+        style do
+          rawtext <<-CSS
+            html, body {
+              font-family: 'Montserrat', sans-serif !important;
+            }
+          CSS
+
+        end 
+      end #closes head do
+      
+      body(class: 'bg-black text-white') do
+      
+        #---Nav bar---
+        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+
+          #Left Side
+          div do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+              text "Home"
+            end
+          end
+        
+          #Right Side
+          div(class: 'space-x-6') do
+            a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text "About Me"}
+            a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text "Projects"}
+          end
+        end
+        #----------------
+
+        #---Main content-----
+
+        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
+          h1(class: 'text-5xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
+            img(src: '/images/myphoto.jpg', alt: "My Photo", class: 'w-48 h-48 rounded-full mx-auto mb-6')
+            text "About Me"  
+          end 
+          p(class: 'text-base mb-4') do
+            text "I am currently employed as a Customs Broker, however I am a technology enthusiast and long-time Linux user with a passion for open source software."
+          end
+          p(class: 'text-base mb-4') do
+            text "Using Replit, I \"vibe coded\" two applications to improve efficiency and accuracy in my work: a container clearance tracking app with detailed analytics to identify process bottlenecks, and a customs broker toolkit that automates complex calculations for charges and customs valuations."
+          end
+          p(class: 'text-base mb-4') do
+            text "What started as \"vibe coding\" quickly evolved into a strong desire to understand how to build web applications myself, from the ground up. I dove into learning Ruby, using Chris Pine's 'Learn to Program' as my guide and relying on LLMs as my personal coding tutors. My first project was an application I'd previously built on Replit, which I recreated from scratch in Ruby. This experience was the foundation for building other web apps and, eventually, this entire website, all of which I've coded from scratch, primarily in Ruby."
+          end
+        end
+      end
+    end
+  end
+end
+
+#---About Me Get Route---------------------------
+get '/about' do
+  AboutPage.new.to_html
+end
+#------------------------------------------------
+
+#---PROJECTS PAGE-------------------------------
+class ProjectsPage < Erector::Widget
+  def content
+    rawtext '<!DOCTYPE html>'
+    html do
+      head do
+        title "Projects - Thomas Ridgeon"
+
+        link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
+        link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+        title "Hey I'm Thomas!"
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+
+        #CSS code to add custom font
+        style do
+          rawtext <<-CSS
+            html, body {
+              font-family: 'Montserrat', sans-serif !important;
+            }
+          CSS
+
+        end 
+      end #closes head do
+      
+      body(class: 'bg-black text-white') do
+      
+        #---Nav bar---
+        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+
+          #Left Side
+          div do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+              text "Home"
+            end
+          end
+        
+          #Right Side
+          div(class: 'space-x-6') do
+            a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text "About Me"}
+            a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text "Projects"}
+          end
+        end
+        #----------------
+
+        #---Main content-----
+
+        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
+          h1(class: 'text-5xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
+            text "My Projects"  
+          end 
+          a(href: '/portcharges', class: 'text-xl font-bold hover:text-gray-300 transition-colours') do
+            text "Port Charges Calculator"
+          end
+          p(class: 'text-base mb-4') do
+            text "This is the first web app I coded from scratch. It's one of the tools I had created with Replit for my Customs Broker Toolkit. It's a simple web app for customs brokers in Barbados to calculate Barbados Port Charges."
+          end
+          a(href: '/solardcalculator', class: 'text-xl font-bold hover:text-gray-300 transition-colours') do
+            text "Solar D Calculator"
+          end
+          p(class: 'text-base mb-4') do  
+            text "This is a web app which tells you the current UV index of the sun in your region and calculates, based on your age and skin type, the amount of time you would have to be outside with at least 25% of your body exposed to synthesize an optimum daily amount of vitamin D (1,000 IU)."
+          end
+        end
+      end
+    end
+  end
+end
+
+#---Projects Get Route---------
+get '/projects' do
+  ProjectsPage.new.to_html
+end
+#------------------------------------------------
 
 
 #---PORT CHARGES CALCULATOR-------------------
@@ -260,9 +417,14 @@ if @result
             end # Closes the div do block
           end # Closes the if do block
 
-#Add return to homepage button
 div(class: 'my-8 text-center') do
-  a(href: '/', class: 'inline-block py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
+  a(href: '/projects', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
+    text 'Return to Projects'
+  end
+end
+# Smaller Return to Homepage button
+div(class: 'my-8 text-center') do
+  a(href: '/', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
     text 'Return to Homepage'
   end
 end
@@ -426,8 +588,8 @@ class SolarDCalculatorPage < Erector::Widget
           end #end of age field
 
           div(class: 'mb-6') do
-            label('Fitzpatrick Skin Type', for: 'skin_type', class: 'block text-sm font-medium text-gray-700 mb-2')
-            select(id: 'skin_type', name: 'skin_type', required: true, class: 'block text-sm font-medium text-gray-700 mb-2') do
+            label('Fitzpatrick Skin Type', for: 'skin_type', class: 'block text-base font-medium text-gray-700 mb-2')
+            select(id: 'skin_type', name: 'skin_type', required: true, class: 'block w-full py-2 px-3 text-base font-medium text-gray-700 mb-2') do
               ## The classes are applied to the SELECT tag, as most browsers ignore them on OPTION tags.
             option('Select your skin type:', value: '', disabled: true, selected: true)
               option('Type I: Very Fair (always burns, does not tan)', value: '1')
@@ -469,7 +631,7 @@ class SolarDCalculatorPage < Erector::Widget
       div(class: 'mt-8 p-6 bg-gray-100 rounded-lg text-left') do
         h3(class: 'text-xl font-bold text-gray-800 mb-2') { "About the Calculation" }
         p(class: 'text-sm text-gray-700 mb-4') do
-          text "This model is based on research by Dr. Michael Holick, a leading expert on vitamin D. The app calculates the time needed to synthesize 1,000 IU, which is considered an optimal daily level by many health professionals, though it is higher than the official Recommended Dietary Allowance (RDA) of 600-800 IU. The RDA is the minimum amount needed to prevent deficiency diseases, while the optimal level is a target for broader health benefits."
+          text "This model is based on research by Dr. Michael Holick, a leading expert on vitamin D. The app calculates the time needed to synthesize 1,000 IU, which is considered an optimal daily level by many health professionals."
         end
 
         p(class: 'text-xs text-gray-500 mt-4') do
@@ -481,10 +643,23 @@ class SolarDCalculatorPage < Erector::Widget
         end
       end 
 
+div(class: 'my-4 text-center') do
+  a(href: '/sunbenefits', class: 'bg-white text-gray-700 text-base') do
+    text "Click here to learn more about the benefits of sun exposure"
+  end
+end     
 
-            a(href: '/', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300 inline-block mt-6') do
-              text 'Return to Homepage'
-            end #This end closes the homepage link
+div(class: 'my-8 text-center') do
+  a(href: '/projects', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
+    text 'Return to Projects'
+  end
+end
+# Smaller Return to Homepage button
+div(class: 'my-8 text-center') do
+  a(href: '/', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
+    text 'Return to Homepage'
+  end
+end
 
           end 
         end 
@@ -612,3 +787,74 @@ SolarDCalculatorPage.new(uv_index: uv_index, result_time: required_sun_time).to_
 end
 #----------------------------------
 
+#---SunBenefitsPage--------------
+#Sun Benefits erector Widget
+
+class SunBenefitsPage < Erector::Widget
+    #defines a new class HomePage which inherits from the superclass Erector::Widget. :: signifies that the Widget class lives inside the Erector module. 
+    #So because of inheritance, the HomePage is an Erector::Widget, and therefore gets all the methods and functionality of Erector::Widget.
+  
+  def content
+    rawtext '<!DOCTYPE html>'
+    #By including <!DOCTYPE html>, you ensure the browser uses the latest and most consistent rendering rules for modern HTML.
+    html do
+      head do
+        
+        link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
+        link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+        title "Hey I'm Thomas!"
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+
+        #CSS code to add custom font
+        style do
+          rawtext <<-CSS
+            html, body {
+              font-family: 'Montserrat', sans-serif !important;
+            }
+          CSS
+
+        end 
+      end #closes head do
+
+      body(class: 'bg-white text-black') do
+
+        #---Nav bar---
+        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+
+          #Left Side
+          div do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+              text "Home"
+            end
+          end
+        
+          #Right Side
+          div(class: 'space-x-6') do
+            a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text "About Me"}
+            a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text "Projects"}
+          end
+        end
+        #----------------
+
+        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
+          h1(class: 'text-5xl font-bold mt-20 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
+            text "The Benefits of Sun Exposure"  
+          end 
+          p(class: 'text-base mb-4') do
+            text "."
+          end
+          p(class: 'text-base mb-4') do  
+            text "."
+          end
+        end
+      end
+    end
+  end
+end
+
+#---SolarInfo Get Route--------
+get '/sunbenefits' do
+  SunBenefitsPage.new.to_html
+end
+        
