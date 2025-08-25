@@ -61,13 +61,13 @@ class HomePage < Erector::Widget
 
           #Left Side
           div do
-            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
               text "Home"
             end
           end
         
           #Right Side
-          div(class: 'space-x-6') do
+          div(class: 'space-x-6 mr-20') do
             a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text "About Me"}
             a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text "Projects"}
           end
@@ -76,7 +76,7 @@ class HomePage < Erector::Widget
 
         #---Main content-----
 
-        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
+        div(class: 'max-w-2xl p-6 flex flex-col items-start ml-20') do
             #max-width: 42rem; (which is typically 672px). This is the most important part for readability. It prevents your text from stretching all the way across a wide monitor, creating an overly long line that is difficult to read. It creates a comfortable, column-like width for your text.
             #Padding: 6 creates breathing room inside the div, between the edges of this container and all the contents inside of it. On mobile viewing, this ensures the text doesn't touch the very edge of the screen. 
 
@@ -143,13 +143,13 @@ class AboutPage < Erector::Widget
 
           #Left Side
           div do
-            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
               text "Home"
             end
           end
         
           #Right Side
-          div(class: 'space-x-6') do
+          div(class: 'space-x-6 mr-20') do
             a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text "About Me"}
             a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text "Projects"}
           end
@@ -158,11 +158,13 @@ class AboutPage < Erector::Widget
 
         #---Main content-----
 
-        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
-          h1(class: 'text-5xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
-            img(src: '/images/myphoto.jpg', alt: "My Photo", class: 'w-48 h-48 rounded-full mx-auto mb-6')
-            text "About Me"  
-          end 
+        div(class: 'max-w-5xl p-6 flex flex-col ml-20') do
+          h1(class: 'text-5xl font-bold mt-28 mb-10') do 
+            text "About Me"
+          end
+
+          div(class: 'flex items-start gap-10') do 
+           div(class: 'flex-1') do 
           p(class: 'text-base mb-4') do
             text "I am currently employed as a Customs Broker, however I am a technology enthusiast and long-time Linux user with a passion for open source software."
           end
@@ -173,10 +175,15 @@ class AboutPage < Erector::Widget
             text "What started as \"vibe coding\" quickly evolved into a strong desire to understand how to build web applications myself, from the ground up. I dove into learning Ruby, using Chris Pine's 'Learn to Program' as my guide and relying on LLMs as my personal coding tutors. My first project was an application I'd previously built on Replit, which I recreated from scratch in Ruby. This experience was the foundation for building other web apps and, eventually, this entire website, all of which I've coded from scratch, primarily in Ruby."
           end
         end
+        div(class: 'flex-shrink-0 self-center') do 
+         img(src: '/images/myphoto.jpg', alt: "My Photo", class: 'w-64 h-64 rounded-full mx-auto mb-6')
+         end
+       end 
       end
     end
   end
-end
+ end
+end 
 
 #---About Me Get Route---------------------------
 get '/about' do
@@ -216,13 +223,13 @@ class ProjectsPage < Erector::Widget
 
           #Left Side
           div do
-            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
               text "Home"
             end
           end
         
           #Right Side
-          div(class: 'space-x-6') do
+          div(class: 'space-x-6 mr-20') do
             a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text "About Me"}
             a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text "Projects"}
           end
@@ -231,7 +238,7 @@ class ProjectsPage < Erector::Widget
 
         #---Main content-----
 
-        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
+        div(class: 'max-w-2xl p-6 flex flex-col items-start ml-20') do
           h1(class: 'text-5xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
             text "My Projects"  
           end 
@@ -317,6 +324,18 @@ class PortChargesCalculatorPage < Erector::Widget
         title 'Port Charges Calculator'
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
         #This is the standard HTML way to link to the Tailwind CSS stylesheet. It tells the browser, "Go get the CSS file at this URL and apply its styles to this page."
+        link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
+  link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+  link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+
+  # Custom font CSS
+  style do
+    rawtext <<-CSS
+      html, body {
+        font-family: 'Montserrat', sans-serif !important;
+      }
+    CSS
+  end
       end
       #Tailwind CSS is a framework which provides a large set of pre-built classes that you can apply directly to your HTML elements to style them.
       #The relationship between Erector and Tailwind CSS is that one provides the structure and the other provides the styling. They work together by allowing you to build the HTML structure using Ruby methods (Erector) and then apply pre-built styling to those elements by passing Tailwind's utility classes as arguments to those methods. Essentially, Erector creates the tags, and Tailwind CSS provides the look and feel.
@@ -562,10 +581,22 @@ class SolarDCalculatorPage < Erector::Widget
       head do
         title { 'Solar D Calculator' }
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' 
+        link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
+  link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+  link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+
+  # Custom font CSS
+  style do
+    rawtext <<-CSS
+      html, body {
+        font-family: 'Montserrat', sans-serif !important;
+      }
+    CSS
+  end
       end
       body(class: 'font-sans bg-slate-100 flex justify-center min-h-screen p-5') do
         div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full text-center') do
-          h1(class: 'text-3xl font-bold text-center text-slate-800 mb-8') {'Solar D Calculator'}
+          h1(class: 'text-3xl font-bold text-center text-slate-800 mb-8') { text 'Solar D Calculator' }
 
           if @result_time.nil? ##if nil, this means we will display the form for the initial GET request 
 
@@ -840,7 +871,10 @@ class SunBenefitsPage < Erector::Widget
         div(class: 'max-w-2xl p-6 flex flex-col items-start') do
           h1(class: 'text-5xl font-bold mt-20 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
             text "The Benefits of Sun Exposure"  
-          end 
+          end
+          h2(class: 'text-2xl font-bold my-8') do
+            text "Research indicates that vitamin D derived from sunlight exposure surpasses oral supplementation in efficacy due to distinct physiological mechanisms. Here's a clear, concise explanation:"
+          end
           p(class: 'text-base mb-4') do
             text "."
           end
