@@ -1,11 +1,3 @@
-#gem install sinatra
-#gem install sinatra-reloader
-
-#To test app in local host:
-#Once my Gemfile and config.ru files are correct, and in the myrubyapps directory
-#cd into myrubyapps directory and run bundle install to download and set up all the required libraries from my Gemfile.
-#Then run the command: bundle exec puma to open the app in localhost
-
 #---REQUIREMENTS---------------------------------
 require 'sinatra'
 require 'dotenv/load' #loads environment variables from a .env file 
@@ -17,7 +9,7 @@ require 'sinatra/reloader'
 configure :development do
   register Sinatra::Reloader
 end
-#-----------------------------------------------
+#-------------------------
 
 #---API Keys------------------------------------
 OPENUV_API_KEY = ENV['OPENUV_API_KEY']
@@ -36,6 +28,9 @@ class HomePage < Erector::Widget
     #By including <!DOCTYPE html>, you ensure the browser uses the latest and most consistent rendering rules for modern HTML.
     html do
       head do
+        title "Home Page"
+        meta(charset: 'UTF-8')
+        meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0')
         
         link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
@@ -54,7 +49,7 @@ class HomePage < Erector::Widget
         end 
       end #closes head do
 
-      body(class: 'bg-black text-white') do
+      body(class: 'bg-white text-black') do
 
         #---Nav bar---
         nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
@@ -77,31 +72,21 @@ class HomePage < Erector::Widget
         #---Main content-----
 
         div(class: 'max-w-2xl p-6 flex flex-col items-start ml-20') do
-            #max-width: 42rem; (which is typically 672px). This is the most important part for readability. It prevents your text from stretching all the way across a wide monitor, creating an overly long line that is difficult to read. It creates a comfortable, column-like width for your text.
-            #Padding: 6 creates breathing room inside the div, between the edges of this container and all the contents inside of it. On mobile viewing, this ensures the text doesn't touch the very edge of the screen. 
-
-          
-
-          h1(class: 'text-5xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
+          h1(class: 'text-7xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
             text "Hey!"  
-          end #closes h1 do
-            
-
-#The Tailwind text size scale (from small to large): xs -> sm -> base -> lg -> xl -> 2xl -> 3xl -> 4xl -> 5xl -> 6xl -> 7xl -> 8xl -> 9xl
-#p-6 adds padding to all sides | pt-6 adds padding to the top only | pr-4 adds padding to right only | pb-6 adds padding to the bottom only | pl-6 adds padding to the left only | px-6 adds padding to the left and right | py-6 adds padding to the top and bottom.
-
-          p(class: 'text-2xl mb-8') do #paragraphs only need bottom margin to space themselves from the next element. 
+          end 
+          p(class: 'text-5xl mb-8') do 
             text "My name is Thomas Ridgeon"
-          end #closes p do
-          p(class: 'text-base mb-4') do
+          end 
+          p(class: 'text-lg mb-4') do
             text "This is my website I coded from scratch where you can read a bit about me and try out some of the webapps I created while learning to program."
           end
-        end #closes div do
+        end
 
-      end #closes body
-    end #closes html
-  end #closes content
-end #closes homepage class
+      end 
+    end 
+  end 
+end 
 
                  
 #---Homepage Get Route---------------------------
@@ -110,14 +95,19 @@ get '/' do
 end
 #------------------------------------------------
 
+
+
+
 #---ABOUT PAGE-----------------------------------
-#---About page erector widget-----------
+#---About Page Widget-----------
 class AboutPage < Erector::Widget
   def content
     rawtext '<!DOCTYPE html>'
     html do
       head do
         title "About Me - Thomas Ridgeon"
+        meta(charset: 'UTF-8')
+        meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0')
 
         link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
@@ -134,9 +124,9 @@ class AboutPage < Erector::Widget
           CSS
 
         end 
-      end #closes head do
+      end 
       
-      body(class: 'bg-black text-white') do
+      body(class: 'bg-white text-black') do
       
         #---Nav bar---
         nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
@@ -191,6 +181,7 @@ get '/about' do
 end
 #------------------------------------------------
 
+
 #---PROJECTS PAGE-------------------------------
 class ProjectsPage < Erector::Widget
   def content
@@ -198,6 +189,8 @@ class ProjectsPage < Erector::Widget
     html do
       head do
         title "Projects - Thomas Ridgeon"
+        meta(charset: 'UTF-8')
+        meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0')
 
         link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
@@ -216,7 +209,7 @@ class ProjectsPage < Erector::Widget
         end 
       end #closes head do
       
-      body(class: 'bg-black text-white') do
+      body(class: 'bg-white text-black') do
       
         #---Nav bar---
         nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
@@ -239,7 +232,7 @@ class ProjectsPage < Erector::Widget
         #---Main content-----
 
         div(class: 'max-w-2xl p-6 flex flex-col items-start ml-20') do
-          h1(class: 'text-5xl font-bold mt-28 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
+          h1(class: 'text-5xl font-bold mt-28 mb-10') do 
             text "My Projects"  
           end 
           a(href: '/portcharges', class: 'text-xl font-bold hover:text-gray-300 transition-colours') do
@@ -265,6 +258,7 @@ get '/projects' do
   ProjectsPage.new.to_html
 end
 #------------------------------------------------
+
 
 
 #---PORT CHARGES CALCULATOR-------------------
@@ -305,28 +299,22 @@ RATES = {
 #In Ruby, => is a special operator most commonly used to define key-value pairs within a hash. It separates the key from its corresponding value.
 #the curly braces {} are used to define a hash. A hash is a fundamental data structure in Ruby that stores data in key-value pairs. It's a perfect way to organize and look up information.
 
-#---Port Charges Calculator Widget-----
-#With the Erector gem, instead of writing a big block of HTML, you define your page's structure and content using Ruby methods. This lets you stay in the Ruby world you're more comfortable with.
 
-#Use an Erector class to define the HTML with Tailwind CSS classes
+#---Port Charges Calculator Widget-----
 class PortChargesCalculatorPage < Erector::Widget
-  #This line defines a new class named PortChargesCalculatorPage. By inheriting from Erector::Widget, this class gets all the special abilities it needs to generate HTML using Ruby methods. 
   def content
-    #This is a special method required by Erector. Everything you want to appear on your web page must be written inside this content method
     html do
       head do 
-        #html do: This is an Erector method that generates the opening <html> tag for your web page. All subsequent code within this block will be nested inside the html tag.
-        #head do: This generates the <head> tag, which contains important metadata about the page that isn't displayed to the user.
         meta(charset: 'UTF-8')
         meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0')
         #meta(charset: 'UTF-8'): This line generates the <meta charset="UTF-8"> tag. This is crucial for web browsers to correctly display characters from different languages.
         #meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0'): This generates a meta tag that is essential for making the page responsive and look good on mobile devices. It tells the browser to match the page's width to the device's screen width.
         title 'Port Charges Calculator'
+
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
-        #This is the standard HTML way to link to the Tailwind CSS stylesheet. It tells the browser, "Go get the CSS file at this URL and apply its styles to this page."
         link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
-  link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
-  link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
 
   # Custom font CSS
   style do
@@ -337,116 +325,107 @@ class PortChargesCalculatorPage < Erector::Widget
     CSS
   end
       end
-      #Tailwind CSS is a framework which provides a large set of pre-built classes that you can apply directly to your HTML elements to style them.
-      #The relationship between Erector and Tailwind CSS is that one provides the structure and the other provides the styling. They work together by allowing you to build the HTML structure using Ruby methods (Erector) and then apply pre-built styling to those elements by passing Tailwind's utility classes as arguments to those methods. Essentially, Erector creates the tags, and Tailwind CSS provides the look and feel.
 
-body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-screen p-5') do
-  div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full') do
-    h1(class:'text-3xl font-bold text-center text-slate-800 mb-8') do
-      text 'Port Charges Calculator'
-    end
+ body(class: 'font-sans bg-slate-100 flex items-center justify-center min-h-screen p-5') do
+    div(class: 'container bg-white p-10 rounded-xl shadow-2xl max-w-lg w-full') do
+      h1(class:'text-3xl font-bold text-center text-slate-800 mb-8') do
+        text 'Port Charges Calculator'
+     end
 
-form(action: '/calculate', method: 'post') do 
-  #form(action: '/calculate', method: 'post') do: This line uses the Erector form method to create an HTML <form> tag
-  #action: '/calculate': This attribute specifies the URL (/calculate) to which the form data will be sent when the user clicks the "Calculate Charges" button. This corresponds to the post '/calculate' route in the Sinatra app.
-  #method: 'post': This specifies that the form data will be sent using the HTTP POST method, which is the standard way to submit data that creates or updates something on the server.
-  div(class: 'mb-6') do
-    label('Number of Containers:', for: 'num_containers', class: 'block text-sm font-medium text-gray-700 mb-2')
-    #This creates an HTML <label> tag with the text "Number of Containers:". for: 'num_containers': This attribute links the label to the input field with the matching id of num_containers. This is important for accessibility, as clicking the label will focus the input field.
-    input(type: 'number', id: 'num_containers', name: 'num_containers', min: '1', required: true, class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500') do
-    #This line generates the <input> tag. type: 'number': This makes it a number-only input field, which often brings up a numeric keypad on mobile devices. id: 'num_containers' and name: 'num_containers': The id is used to link to the label, and the name is the key used to access the input's value in the Sinatra params hash when the form is submitted.   
-  end
-  div(class: 'mb-6') do
-    label('Container Size/Type', for: 'container_type', class: 'block text-sm font-medium text-gray-700 mb-2')
-    #This creates the label for the dropdown menu, linking it to the container_type element.
-    #select(id: 'container_type', name: 'container_type', required: true, class: 'w-full ...') do: This creates the <select> tag, which is the dropdown itself.
-    select(id: 'container_type', name: 'container_type', required: true, class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500') do 
-      option('Select a size...', value: '', disabled: true, selected: true)
-      #This is the first <option> in the dropdown. It acts as a placeholder or a prompt for the user. value: '': This option has an empty value.value: '': This option has an empty value. disabled: true: This makes the option unclickable. selected: true: This makes the option the default one shown when the page loads.
-      option('20ST', value: '20ST')
-      option('40ST', value: '40ST')
-      option('40HC', value: '40HC')
-      option('20RH', value: '20RH')
-      option('40RH', value: '40RH')
-      #These lines create the remaining <option> tags, representing the different container sizes. When a user selects one of these, its value attribute ('20ST', '40ST', etc.) is sent to the server.
-    end
-  end
-div(class: 'mb-6') do
-  label 'Include Charges:', class: 'block text-sm font-medium text-gray-700 mb-2'
-  ['fas', 'security_fee', 'hazard', 'unstuffing', 'plugs_daily_rate'].each do |charge|
-    #This is a core Ruby loop that makes the code efficient. is an array of strings, where each string corresponds to a type of charge. .each do |charge| iterates over this array one item at a time. In each iteration, the current string (e.g., 'fas', then 'security_fee') is assigned to the variable charge. This means the code inside the loop will run once for each type of charge. 
-    div(class: 'flex items-center mb-3') do
-      #div(class: 'flex items-center mb-3') do: Inside the loop, this line creates a <div> to wrap each individual checkbox and its label. The flex and items-center classes use Tailwind's flexbox to align the checkbox and its label horizontally, and the mb-3 class adds a bottom margin to space out the checkboxes vertically.
-      input(type: 'checkbox', id: charge, name: charge, class: 'form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300')
-      # This is the Erector method that generates the <input> tag for each checkbox. type: 'checkbox': Specifies that the input element is a checkbox.
-      #id: charge and name: charge: The id and name attributes are set dynamically based on the current charge in the loop (e.g., for the first iteration, they would both be 'fas'). This ensures each checkbox has a unique identifier that the server can use to figure out which charges the user selected.
-      label(charge.split('_').map(&:capitalize).join(' '), for: charge, class: 'ml-3 text-sm text-gray-700')
-      #This generates the <label> tag for the checkbox.
-      #charge.split('_').map(&:capitalize).join(' '): This is a piece of Ruby code that takes the string from the loop (e.g., 'security_fee') and formats it to be a user-friendly label ("Security Fee"). It splits the string at the underscore, capitalizes each word, and then joins them back together with a space.
-      #for: charge: This attribute links the label to its corresponding input field using the charge variable.
-    end
-  end
-end
-div(class: 'mb-6', id: 'plugs-days-group') do
-  label('Number of Days for Plugs:', for: 'plugs_days', class: 'block text-sm font-medium text-gray-700 mb-2')
-  input(type: 'number', id: 'plugs_days', name: 'plugs_days', min: '0', value: '0', class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500')
-  #min: '0': This sets the minimum acceptable value to zero, preventing negative numbers. value: '0': This sets the default value of the field to 0 when the page first loads.
-end
-button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
-  #This line generates the <button> tag. type: 'submit': This is a crucial attribute that tells the browser this button is meant to submit the form data to the server.
-  text 'Calculate Charges'
-  end
-end
+     form(action: '/calculate', method: 'post') do 
+     #form(action: '/calculate', method: 'post') do: This line uses the Erector form method to create an HTML <form> tag
+     #action: '/calculate': This attribute specifies the URL (/calculate) to which the form data will be sent when the user clicks the "Calculate Charges" button. This corresponds to the post '/calculate' route in the Sinatra app.
+     #method: 'post': This specifies that the form data will be sent using the HTTP POST method, which is the standard way to submit data that creates or updates something on the server.
+      
+     div(class: 'mb-6') do
+        label('Number of Containers:', for: 'num_containers', class: 'block text-sm font-medium text-gray-700 mb-2')
+        input(type: 'number', id: 'num_containers', name: 'num_containers', min: '1', required: true, class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500') do
+        end
+        div(class: 'mb-6') do
+          label('Container Size/Type', for: 'container_type', class: 'block text-sm font-medium text-gray-700 mb-2')
+          select(id: 'container_type', name: 'container_type', required: true, class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500') do 
+          option('Select a size...', value: '', disabled: true, selected: true)
+          #This is the first <option> in the dropdown. It acts as a placeholder or a prompt for the user. value: '': This option has an empty value.value: '': This option has an empty value. disabled: true: This makes the option unclickable. selected: true: This makes the option the default one shown when the page loads.
+          option('20ST', value: '20ST')
+          option('40ST', value: '40ST')
+          option('40HC', value: '40HC')
+          option('20RH', value: '20RH')
+          option('40RH', value: '40RH')
+        end
+     end
 
-if @result
-  #This is a conditional statement. It checks if the @result instance variable has a value. In Sinatra, the @result variable is only assigned a value when the post '/calculate' route is called after the form is submitted. This if block ensures that the total charge is only displayed after the calculation has been performed and a result is available, and not when the page is first loaded.
-  div(class: 'mt-8 p-6 bg-blue-50 rounded-lg') do
-    h2(class: 'text-2xl font-bold text-center text-blue-800 mb-4') do
-      text 'Breakdown of Charges'
-    end
-    ul(class: 'mb-4') do
-      #ul(class: 'mb-4') do: This creates an unordered list (<ul>) to hold the individual charge items. The mb-4 adds a bottom margin.
-      @result[:breakdown].each do |charge_name, amount|
-        #@result[:breakdown].each do |charge_name, amount|: This is a key line that iterates through the breakdown hash 
-        #charge_name, amount|: in each loop, the key (e.g., 'FAS') is assigned to the variable charge_name and the value (the calculated amount, e.g., 1221.98) is assigned to the variable amount.
-        li(class: 'flex justify-between items-center py-2 border-b border-blue-200 last:border-b-0') do
-          #This creates a list item (<li>) for each charge. The Tailwind classes are used to format it
-          span(class: 'text-sm font-medium text-blue-700') do
-            #This creates a <span> to hold the charge name. The Tailwind classes style the text.
-            text charge_name
-          end
-          span(class: 'text-sm font-semibold text-blue-700') do
-            #This creates another <span> to hold the amount. The classes style it with a slightly heavier font weight 
-            text "BBD $%.2f" % amount
-            #"BBD $%.2f": is a Ruby format string. %.2f is the placeholder for a floating-point number, and the .2 specifies that it should be rounded to exactly two decimal places.
-            #% amount: This is the format operator. It tells Ruby to take the value of the amount variable and insert it into the placeholder in the string. The result is a clean, formatted string like "BBD $1221.98".
-          end
+      div(class: 'mb-6') do
+        label 'Include Charges:', class: 'block text-sm font-medium text-gray-700 mb-2'
+        ['fas', 'security_fee', 'hazard', 'unstuffing', 'plugs_daily_rate'].each do |charge|
+              #This is a core Ruby loop that makes the code efficient. is an array of strings, where each string corresponds to a type of charge. .each do |charge| iterates over this array one item at a time. In each iteration, the current string (e.g., 'fas', then 'security_fee') is assigned to the variable charge. This means the code inside the loop will run once for each type of charge. 
+                
+        div(class: 'flex items-center mb-3') do
+          input(type: 'checkbox', id: charge, name: charge, class: 'form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300')
+          label(charge.split('_').map(&:capitalize).join(' '), for: charge, class: 'ml-3 text-sm text-gray-700')
+          #charge.split('_').map(&:capitalize).join(' '): This is a piece of Ruby code that takes the string from the loop (e.g., 'security_fee') and formats it to be a user-friendly label ("Security Fee"). It splits the string at the underscore, capitalizes each word, and then joins them back together with a space.
         end
       end
     end
-    div(class: 'text-lg font-semibold text-center text-blue-700 mt-4') do
-      text 'Total Port Charges'
-      #This is an Erector method that simply inserts the string "Total Port Charges" as plain text inside the <div>
-      span(class: 'text-2xl font-extrabold') do
-        #This line creates an inline <span> element. Since it's an inline element, it appears on the same line as the text that precedes it ("Total Port Charges"). This <span> is used to apply a different style specifically to the number, making it stand out from the rest of the line. The Tailwind classes are applied
-        #A <span> is an inline HTML element that is used to apply styling or markup to a small portion of text within a larger block.
-        text " BBD $%.2f" % @result[:total]
-       end # Closes the span do block
-              end # Closes the div do block
-            end # Closes the div do block
-          end # Closes the if do block
+     
+    div(class: 'mb-6', id: 'plugs-days-group') do
+      label('Number of Days for Plugs:', for: 'plugs_days', class: 'block text-sm font-medium text-gray-700 mb-2')
+      input(type: 'number', id: 'plugs_days', name: 'plugs_days', min: '0', value: '0', class: 'w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500')
+    end
+    button(type: 'submit', class: 'w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-colors duration-300') do
+      #This line generates the <button> tag. type: 'submit': This is a crucial attribute that tells the browser this button is meant to submit the form data to the server.
+      text 'Calculate Charges'
+    end
+ end
 
-div(class: 'my-8 text-center') do
-  a(href: '/projects', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
-    text 'Return to Projects'
-  end
-end
-# Smaller Return to Homepage button
-div(class: 'my-8 text-center') do
-  a(href: '/', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
-    text 'Return to Homepage'
-  end
-end
+  if @result
+    #This is a conditional statement. It checks if the @result instance variable has a value. In Sinatra, the @result variable is only assigned a value when the post '/calculate' route is called after the form is submitted. This if block ensures that the total charge is only displayed after the calculation has been performed and a result is available, and not when the page is first loaded.
+    div(class: 'mt-8 p-6 bg-blue-50 rounded-lg') do
+      h2(class: 'text-2xl font-bold text-center text-blue-800 mb-4') do
+        text 'Breakdown of Charges'
+      end
+      ul(class: 'mb-4') do
+        #ul(class: 'mb-4') do: This creates an unordered list (<ul>) to hold the individual charge items.
+        @result[:breakdown].each do |charge_name, amount|
+          #@result[:breakdown].each do |charge_name, amount|: This is a key line that iterates through the breakdown hash 
+          #charge_name, amount|: in each loop, the key (e.g., 'FAS') is assigned to the variable charge_name and the value (the calculated amount, e.g., 1221.98) is assigned to the variable amount.
+          li(class: 'flex justify-between items-center py-2 border-b border-blue-200 last:border-b-0') do
+            #This creates a list item (<li>) for each charge. The Tailwind classes are used to format it
+            span(class: 'text-sm font-medium text-blue-700') do
+               #This creates a <span> to hold the charge name. The Tailwind classes style the text.
+               text charge_name
+             end
+             span(class: 'text-sm font-semibold text-blue-700') do
+                #This creates another <span> to hold the amount. The classes style it with a slightly heavier font weight 
+                text "BBD $%.2f" % amount
+                #"BBD $%.2f": is a Ruby format string. %.2f is the placeholder for a floating-point number, and the .2 specifies that it should be rounded to exactly two decimal places.
+                #% amount: This is the format operator. It tells Ruby to take the value of the amount variable and insert it into the placeholder in the string. The result is a clean, formatted string like "BBD $1221.98".
+              end
+          end
+        end
+      end
+
+      div(class: 'text-lg font-semibold text-center text-blue-700 mt-4') do
+          text 'Total Port Charges'
+          span(class: 'text-2xl font-extrabold') do
+            #This line creates an inline <span> element. Since it's an inline element, it appears on the same line as the text that precedes it ("Total Port Charges"). This <span> is used to apply a different style specifically to the number, making it stand out from the rest of the line. The Tailwind classes are applied
+            text " BBD $%.2f" % @result[:total]
+          end 
+       end 
+    end 
+  end 
+
+      #---Return to Homepage and Return to Projects Buttons
+      div(class: 'my-8 text-center') do
+          a(href: '/projects', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
+            text 'Return to Projects'
+         end
+       end
+
+      div(class: 'my-8 text-center') do
+        a(href: '/', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
+          text 'Return to Homepage'
+       end
+     end
 
         end 
       end 
@@ -473,12 +452,7 @@ end
 #---Port Charges Get Route------------
 
 get '/portcharges' do
-  #The code get '/' is a fundamental part of the Sinatra framework and represents the homepage of your web application. It's the first thing a user sees when they visit your site.
   #The keyword get is an HTTP method. It's the standard way for a web browser to request a resource from a web server. When you type a URL into a browser and press Enter, the browser sends a GET request.
-  #'/portcharges' represents the path of your website. Rather than just get '/', which would represent the root path, this makes the port charges calculator only accessible at /portcharges, leaving the homepage available for other content.
-#The get '/' route is for retrieving or displaying a page. It's what happens when you visit thomasridgeon.com/portcharges. The browser is simply asking the server for the HTML document. The server doesn't expect any data to be sent with this request, just the page itself.
-#The post '/calculate' route is separate. It's good practice to keep the form submission separate, so the form will still send its data to the correct location for calculation, even if the /portcharges page has a different URL.
-#The post '/calculate' route is for submitting data to the server. This happens when the user fills out the form and clicks the "Calculate Charges" button. The form packages up all the user's input and sends it to the URL specified in the form's action attribute.
   PortChargesCalculatorPage.new.to_html
   #This line creates a new instance of the PortChargesCalculatorPage class. This is the class you defined using Erector to build the HTML for your page.
   #.to_html: This method is called on the new PortChargesCalculatorPage object. It's an Erector method that takes all of the Ruby methods you defined in the content block (html, head, body, etc.) and converts them into a single string of valid HTML. This HTML string is what the web browser will receive and render as the homepage.
@@ -489,7 +463,7 @@ end
 
 post '/calculate' do
 #This section of code is a Sinatra route that handles the form submission and performs the initial part of the calculation. It's the logic that runs on the server after a user clicks the "Calculate Charges" button on the form.
-#post '/calculate' do: This line defines the route. post: This specifies the HTTP method. This code block will only execute when a POST request is sent to the /calculate URL. This happens when the user submits the form.
+#The post '/calculate' route is for submitting data to the server. This happens when the user fills out the form and clicks the "Calculate Charges" button. The form packages up all the user's input and sends it to the URL specified in the form's action attribute.
   num_containers = params[:num_containers].to_i
   #num_containers = params[:num_containers].to_i: This line retrieves the value from the "Number of Containers" input field.
   #params: Sinatra automatically collects all the data submitted by a form and puts it into a hash named params.
@@ -551,23 +525,19 @@ post '/calculate' do
     breakdown: breakdown
   }
   PortChargesCalculatorPage.new(result_data).to_html
+end
+
   #Creating the Data Package:
   #result_data =: This line creates a new variable named result_data.
   #{ ... }: The curly braces create a new hash, which is a collection of key-value pairs. This hash acts as a single package to hold all the information you want to pass to the page.
-  #total: total_charge: This creates the first key-value pair.
-  #total:: This is a symbol, which is a lightweight, immutable string in Ruby. It's used here as a permanent, fixed name for the key.
-  #total_charge: This is the variable holding the final calculated total. Its value is assigned to the total: key.
+  #total: total_charge: This creates the first key-value pair.total_charge is the variable holding the final calculated total. Its value is assigned to the total: key.
   #breakdown: breakdown: This creates the second key-value pair.
-  #breakdown:: This is another symbol used as the key.
   #breakdown: This is the variable holding the hash you created that contains the details of each individual charge. This means your result_data hash holds another hash as one of its values.
   
   #Passing the Data to the Page:
   #PortChargesCalculatorPage.new(...): This creates a new instance of your PortChargesCalculatorPage class. When you call .new, it automatically runs the initialize method inside your class.
   #(result_data): This is the argument you are passing to the initialize method. The entire hash you just created is passed as the result parameter to that method, which then assigns it to the @result instance variable.
-  #.to_html: This is the final step. It's an Erector method that takes all the Ruby code you defined in your content method and generates a complete HTML string. This final HTML string is what the web browser will receive and display to the user.
-end
-
-#-----------------------------------------------
+  #-----------------------------------------------
 
 
 
@@ -580,10 +550,13 @@ class SolarDCalculatorPage < Erector::Widget
     html do
       head do
         title { 'Solar D Calculator' }
+        meta(charset: 'UTF-8')
+        meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0')
+
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' 
         link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
-  link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
-  link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
 
   # Custom font CSS
   style do
@@ -604,8 +577,7 @@ class SolarDCalculatorPage < Erector::Widget
               p(class: 'text-lg text-red-600 mb-6') do
                 text "The UV index is currently too low(#{@uv_index}) to synthesize vitamin D."
           end #end of UV too low message
-
-        else
+       else
           p(class: 'text-lg font-semibold text-blue-700 mb-6') {'The current UV index at your location is'}
           p(class: 'text-5xl font-extrabold text-blue-800 mb-6') {@uv_index}
 
@@ -621,7 +593,7 @@ class SolarDCalculatorPage < Erector::Widget
           div(class: 'mb-6') do
             label('Fitzpatrick Skin Type', for: 'skin_type', class: 'block text-base font-medium text-gray-700 mb-2')
             select(id: 'skin_type', name: 'skin_type', required: true, class: 'block w-full py-2 px-3 text-base font-medium text-gray-700 mb-2') do
-              ## The classes are applied to the SELECT tag, as most browsers ignore them on OPTION tags.
+              #The classes are applied to the SELECT tag, as most browsers ignore them on OPTION tags.
             option('Select your skin type:', value: '', disabled: true, selected: true)
               option('Type I: Very Fair (always burns, does not tan)', value: '1')
               option('Type II: Fair (burns easily, tans poorly)', value: '2')
@@ -641,7 +613,6 @@ class SolarDCalculatorPage < Erector::Widget
           end
         end #end of form
       end #end of UV check (too low vs form)
-
       else #else we are on the POST request, so display the results
         p(class: 'text-lg font-semibold text-blue-700 mb-6') do 
           text "To get 1,000 IU of Vitamin D, you'll need to be in the sun for:" 
@@ -685,14 +656,13 @@ div(class: 'my-8 text-center') do
     text 'Return to Projects'
   end
 end
-# Smaller Return to Homepage button
+
 div(class: 'my-8 text-center') do
   a(href: '/', class: 'inline-block py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white text-base font-bold rounded-lg shadow-md transition-colors duration-300') do
     text 'Return to Homepage'
-  end
-end
-
-          end 
+             end
+           end
+          end
         end 
       end 
     end 
@@ -752,9 +722,6 @@ if openuv_response.success?
 else
   "Error: Could not retrieve UV data from OpenUV API. Please check your API key or try again later"
   end
-#else
-  #"Error: Could not retrieve location data from IP-API" - No need for this error message anymore, since we know that during testing with localhost, IP-API will not work to get a geographic location.
-  #end
 end
 #---------------------------------------------------
 
@@ -769,6 +736,7 @@ uv_index = params['uv_index']&.to_f
 age = params['age']&.to_i
 skin_type = params['skin_type']&.to_i
 #Here we get the variables from the form submission
+##params: Sinatra automatically collects all the data submitted by a form and puts it into a hash named params.
 #&.to_f and &.to_i: These are used to safely call a method on an object. The &. operator checks if the object is nil before trying to call the method. If the object is nil, it just returns nil instead of causing an error.
 
 # Check if any of the required parameters are missing (nil).
@@ -776,6 +744,27 @@ skin_type = params['skin_type']&.to_i
 if uv_index.nil? || age.nil? || skin_type.nil?
   redirect '/solardcalculator'
 end
+
+#----Skin type multipliers and age factors--------------------
+
+# widely cited scientific model, often referenced in publications by Dr. Michael Holick, a leading vitamin D researcher, provides a practical rule of thumb. This model assumes that under optimal conditions (clear skies, midday sun, summer, 25% of the body exposed):
+
+#10-15 minutes of sun exposure** on the arms and legs at a UV index of **7** can produce approximately **1,000 IU** of vitamin D.
+
+# **Type I (Very Fair):** Requires slightly less time, roughly **80%** of the baseline.
+# **Type II (Fair):** The baseline for the calculation, at **100%**.
+# **Type III (Medium):** Requires about **20-30% more** time.
+# **Type IV (Olive):** Requires about **50-70% more** time.
+# **Type V (Brown):** Requires **2-3 times more** time.
+# **Type VI (Very Dark):** Requires **5-10 times more** time.
+
+#Scientific studies have shown that the skin's capacity to produce vitamin D decreases with age. By the time a person is 70-80 years old, their skin's ability to produce vitamin D from sunlight is about **two to three times less** than that of a young adult.
+# **Ages 1-30:** No reduction factor.
+# **Ages 30-60:** A progressive reduction, perhaps a linear decrease to a factor of 0.75 by age 60.
+# **Ages 60+:** A continued, more pronounced reduction, to a factor of 0.50 or less by age 70 or 80.
+
+
+
 
 #Fitzpatrick Skin Type Multipliers
 skin_multipliers = {
@@ -818,16 +807,14 @@ SolarDCalculatorPage.new(uv_index: uv_index, result_time: required_sun_time).to_
 end
 #----------------------------------
 
+
 #---SunBenefitsPage--------------
 #Sun Benefits erector Widget
 
 class SunBenefitsPage < Erector::Widget
-    #defines a new class HomePage which inherits from the superclass Erector::Widget. :: signifies that the Widget class lives inside the Erector module. 
-    #So because of inheritance, the HomePage is an Erector::Widget, and therefore gets all the methods and functionality of Erector::Widget.
-  
   def content
     rawtext '<!DOCTYPE html>'
-    #By including <!DOCTYPE html>, you ensure the browser uses the latest and most consistent rendering rules for modern HTML.
+    
     html do
       head do
         
@@ -846,7 +833,7 @@ class SunBenefitsPage < Erector::Widget
           CSS
 
         end 
-      end #closes head do
+      end 
 
       body(class: 'bg-white text-black') do
 
@@ -868,7 +855,9 @@ class SunBenefitsPage < Erector::Widget
         end
         #----------------
 
-        div(class: 'max-w-2xl p-6 flex flex-col items-start') do
+        #---Main content----
+
+        div(class: 'max-w-2xl p-6 flex flex-col items-start ml-20') do
           h1(class: 'text-5xl font-bold mt-20 mb-10') do #h1 only needs a bottom margin to space itself from the paragraphs below.
             text "The Benefits of Sun Exposure"  
           end
@@ -876,10 +865,10 @@ class SunBenefitsPage < Erector::Widget
             text "Research indicates that vitamin D derived from sunlight exposure surpasses oral supplementation in efficacy due to distinct physiological mechanisms. Here's a clear, concise explanation:"
           end
           p(class: 'text-base mb-4') do
-            text "."
+            text ""
           end
           p(class: 'text-base mb-4') do  
-            text "."
+            text ""
           end
         end
       end
