@@ -11,4 +11,5 @@ gem 'irb'
 group :development do
   gem 'pry-byebug'
   gem 'sinatra-reloader'
+  gem 'rubocop', require: false
 end
