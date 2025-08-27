@@ -167,7 +167,7 @@ class AboutPage < Erector::Widget
             end
             div(class: 'flex-shrink-0 self-center') do
               img(src: '/images/myphoto.jpg', alt: 'My Photo',
-                  class: 'w-64 h-64 rounded-full mx-auto mb-6 border border-black')
+                  class: 'w-80 h-80 rounded-full mx-auto mb-6 border border-black')
             end
           end
         end
@@ -263,6 +263,253 @@ end
 #---Projects Get Route---------
 get '/projects' do
   ProjectsPage.new.to_html
+end
+#------------------------------------------------
+
+#---RESUME PAGE-----------------------------------
+#---Resume Widget-----------
+class ResumePage < Erector::Widget
+  def content
+    rawtext '<!DOCTYPE html>'
+    html do
+      head do
+        title 'Resume - Thomas Ridgeon'
+        meta(charset: 'UTF-8')
+        meta(name: 'viewport', content: 'width=device-width, initial-scale=1.0')
+
+        link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
+        link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
+        title "Hey I'm Thomas!"
+        link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+             rel: 'stylesheet'
+
+        # CSS code to add custom font
+        style do
+          rawtext <<-CSS
+            html, body {
+              font-family: 'Montserrat', sans-serif !important;
+            }
+          CSS
+        end
+      end
+
+      body(class: 'bg-white text-black') do
+        #---Nav bar---
+        nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+          # Left Side
+          div do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
+              text 'Home'
+            end
+          end
+
+          # Right Side
+          div(class: 'space-x-6 mr-20') do
+            a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text 'About Me' }
+            a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text 'Projects' }
+          end
+        end
+        #----------------
+
+        #---Main content-----
+        div(class: 'flex items-center justify-start mt-28 p-6 bg-gray-200') do
+          img(src: '/images/myphoto.jpg', alt: 'My Photo',
+              class: 'w-56 h-56 ml-20 rounded-full')
+
+          div(class: 'ml-20') do
+            h1(class: 'text-7xl font-bold') do
+              text 'Thomas Ridgeon'
+            end
+            p(class: 'text-4xl font-medium mt-8') do
+              text 'Customs Broker'
+            end
+          end
+        end
+
+        div(class: 'flex justify-start ml-20 mt-10') do
+          div(class: 'w-1/2 ml-10') do
+            h1(class: 'text-xl font-bold mt-8') do
+              text 'PROFESSIONAL SUMMARY'
+            end
+            p(class: 'text-lg font-normal mt-4') do
+              text 'Multidisciplinary professional with a unique blend of experience across logistics, administration, and academic research. Currently working as a Customs Broker. Recognized for a sharp ability to learn, process, and apply information quickly and effectively.'
+            end
+          end
+
+          div(class: 'ml-20') do
+            h2(class: 'text-xl font-bold mt-8') do
+              text 'CONTACT'
+            end
+            p(class: 'text-lg font-normal mt-4') do
+              text 'Email: thomas.ridgeon@hotmail.com'
+            end
+            a(href: 'https://github.com/thomasridgeon', target: '_blank') do
+              img(src: '/images/github-mark.png', alt: 'GitHub Profile', class: 'w-10 h-10 mt-4')
+            end
+            a(href: 'https://linkedin.com/in/thomas-ridgeon-72b455370', target: '_blank') do
+              img(src: '/images/InBug-Black.png', alt: 'LinkedIn Profile', class: 'w-10 h-10 mt-4')
+            end
+          end
+        end
+        div(class: 'flex justify-start ml-20 mt-4') do
+          div(class: 'w-1/2 ml-10') do
+            h1(class: 'text-xl font-bold mt-8') do
+              text 'WORK EXPERIENCE'
+            end
+            p(class: 'text-lg font-semibold mt-4') do
+              text 'Customs Broker | August 2024 - Present | On-site | Full-time'
+              br
+              text 'Central Customs Agency Ltd., Barbados'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Handle the clearance of shipments for a portfolio of clients, ensuring compliance with national customs laws and trade regulations.'
+              end
+              li do
+                text 'Coordinate with government agencies to obtain required permits, licenses, and inspections.'
+              end
+              li do
+                text 'Work closely with shipping agents to verify documentation and address any issues.'
+              end
+              li do
+                text 'Represent clients at customs offices, the port, and airport to facilitate smooth and timely clearances.'
+              end
+            end
+            p(class: 'text-base font-semibold mt-4 text-gray-600') do
+              text 'Skills: Problem Solving · Time Management · Team Collaboration · Client Relations · Attention to Detail · Adaptability · Working Under Pressure'
+            end
+            p(class: 'text-lg font-semibold mt-14') do
+              text 'Founder and Director | Feb 2022 - Aug 2024 | On-site | Part-time'
+              br
+              text 'The MMA Hub Ltd., Barbados'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Founded and launched Fight Hub, a Mixed Martial Arts gym, through The MMA Hub Ltd.'
+              end
+              li do
+                text 'Served as corporate secretary and managed compliance, including annual returns.'
+              end
+              li do
+                text 'Designed and launched the gym\'s website, managed financials, taught classes, and organized events.'
+              end
+            end
+            p(class: 'text-base font-semibold mt-4 text-gray-600') do
+              text 'Skills: Corporate Compliance · Leadership & Team Coordination'
+            end
+            p(class: 'text-lg font-semibold mt-14') do
+              text 'Administrative Officer | Jan 2022 - Jul 2024 | On-site | Full-time'
+              br
+              text 'Arjay Upholstery & Drapery Ltd., Barbados'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Administered payroll, calculated National Insurance contributions, and managed rental property operations.'
+              end
+              li do
+                text 'Oversaw tenant relations, invoicing, and rent collection.'
+              end
+              li do
+                text 'Worked with legal professionals and CAIPO to resolve corporate matters.'
+              end
+              li do
+                text 'Managed office functions, processed quotations, invoices, and purchase orders, and liaised with clients and suppliers.'
+              end
+            end
+            p(class: 'text-base font-semibold mt-4 text-gray-600') do
+              text 'Skills: Office Administration · Client Relations · Document Management · Basic Accounting · Corporate Compliance'
+            end
+            p(class: 'text-lg font-semibold mt-14') do
+              text 'Warehouse Custodian | Jul 2019 - Jul 2021 | On-site | Full-time'
+              br
+              text 'Serveco Oy., Barbados'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Maintained cleanliness and sanitation across warehouse and office spaces in a logistics terminal'
+              end
+              li do
+                text 'Operated and maintained cleaning machinery; trained new team members.'
+              end
+              li do
+                text 'Gained an outsider\'s perspective on logistics operations, which later informed my work as a customs broker.'
+              end
+            end
+            p(class: 'text-base font-semibold mt-4 text-gray-600') do
+              text 'Skills: Training & Onboarding · Team Collaboration · Attention to Detail · Time Management · Work Ethic & Reliability'
+            end
+            p(class: 'text-lg font-semibold mt-14') do
+              text 'Freelance Research Assistant | Dec 2019 - Jan 2020 | Remote | Part-time'
+              br
+              text 'City as a Platform Research Project, Tampere University, Finland'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Worked as a research assistant for a researcher studying how digital platforms shape local governance and interactions.'
+              end
+              li do
+                text 'Conducted literature reviews, analyzed scholarly articles, and synthesized insights to support outputs.'
+              end
+            end
+            p(class: 'text-base font-semibold mt-4 text-gray-600') do
+              text 'Skills: Academic Research · Literature Review & Source Evaluation · Critical Thinking · Time Management & Self-Motivation'
+            end
+            p(class: 'text-lg font-semibold mt-14') do
+              text 'Agricultural Worker | Nov 2017 - Feb 2018 | On-site | Contract'
+              br
+              text 'PEG Farm and Nature Reserve, Barbados'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Spearheaded a large-scale composting initiative.'
+              end
+              li do
+                text 'Led a composting workshop.'
+              end
+            end
+            p(class: 'text-lg font-semibold mt-14') do
+              text 'Agricultural Worker / Farm Assistant (Apprenticeship) | Jul 2016 - Sep 2017 | On-site'
+              br
+              text 'Tmi Pekka Lamppu, Finland'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Immersed in farm life as a live-in apprentice, assisting with crop production and a commercial-scale organic free-range egg-laying operation.'
+              end
+              li do
+                text 'Led a composting and mushroom cultivation initiative, deepening knowledge of regenerative agriculture and closed-loop systems'
+              end
+              li do
+                text 'Adapted to working in a multilingual environment; began learning Finnish through daily immersion.'
+              end
+            end
+            p(class: 'text-base font-semibold mt-4 text-gray-600') do
+              text 'Skills: Work Ethic & Reliability · Adaptability · Project Management · Teamwork · Communication'
+            end
+            p(class: 'text-lg font-semibold mt-14') do
+              text 'Agricultural Worker / Farm Assistant | May 2013 - Aug 2013 | On-site | Contract'
+              br
+              text 'Tmi Pekka Lamppu, Finland'
+            end
+            ul(class: 'list-disc ml-6 mt-2 space-y-2') do
+              li do
+                text 'Assisted with planting, harvesting, field maintenance, and daily operational tasks'
+              end
+            end
+            p(class: 'text-base font-semibold mt-4 text-gray-600') do
+              text 'Skills: Work Ethic & Reliability · Adaptability · Team Collaboration'
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
+#---Resume Get Route---------
+get '/resume' do
+  ResumePage.new.to_html
 end
 #------------------------------------------------
 
@@ -850,13 +1097,13 @@ class SunBenefitsPage < Erector::Widget
         nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
           # Left Side
           div do
-            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
               text 'Home'
             end
           end
 
           # Right Side
-          div(class: 'space-x-6') do
+          div(class: 'space-x-6 mr-20') do
             a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text 'About Me' }
             a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text 'Projects' }
           end
