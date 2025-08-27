@@ -35,7 +35,8 @@ class HomePage < Erector::Widget
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
         title "Hey I'm Thomas!"
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
-        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+             rel: 'stylesheet'
 
         # CSS code to add custom font
         style do
@@ -49,7 +50,7 @@ class HomePage < Erector::Widget
 
       body(class: 'bg-white text-black') do
         #---Nav bar---
-        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+        nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
           # Left Side
           div do
             a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
@@ -78,6 +79,16 @@ class HomePage < Erector::Widget
             text 'This is my website I coded from scratch where you can read a bit about me and try out some of the webapps I created while learning to program.'
           end
         end
+
+        #---Social Media Icons---
+        div(class: 'flex space-x-4 p-6 ml-20') do
+          a(href: 'https://github.com/thomasridgeon', target: '_blank') do
+            img(src: '/images/github-mark.png', alt: 'GitHub Profile', class: 'w-10 h-10')
+          end
+          a(href: 'https://linkedin.com/in/thomas-ridgeon-72b455370', target: '_blank') do
+            img(src: '/images/InBug-Black.png', alt: 'LinkedIn Profile', class: 'w-10 h-10')
+          end
+        end
       end
     end
   end
@@ -104,7 +115,8 @@ class AboutPage < Erector::Widget
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
         title "Hey I'm Thomas!"
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
-        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+             rel: 'stylesheet'
 
         # CSS code to add custom font
         style do
@@ -118,7 +130,7 @@ class AboutPage < Erector::Widget
 
       body(class: 'bg-white text-black') do
         #---Nav bar---
-        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+        nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
           # Left Side
           div do
             a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
@@ -143,19 +155,29 @@ class AboutPage < Erector::Widget
 
           div(class: 'flex items-start gap-10') do
             div(class: 'flex-1') do
-              p(class: 'text-base mb-4') do
+              p(class: 'text-base font-medium mb-4') do
                 text 'I am currently employed as a Customs Broker, however I am a technology enthusiast and long-time Linux user with a passion for open source software.'
               end
-              p(class: 'text-base mb-4') do
+              p(class: 'text-base font-medium mb-4') do
                 text 'Using Replit, I "vibe coded" two applications to improve efficiency and accuracy in my work: a container clearance tracking app with detailed analytics to identify process bottlenecks, and a customs broker toolkit that automates complex calculations for charges and customs valuations.'
               end
-              p(class: 'text-base mb-4') do
+              p(class: 'text-base font-medium mb-4') do
                 text "What started as \"vibe coding\" quickly evolved into a strong desire to understand how to build web applications myself, from the ground up. I dove into learning Ruby, using Chris Pine's 'Learn to Program' as my guide and relying on LLMs as my personal coding tutors. My first project was an application I'd previously built on Replit, which I recreated from scratch in Ruby. This experience was the foundation for building other web apps and, eventually, this entire website, all of which I've coded from scratch, primarily in Ruby."
               end
             end
             div(class: 'flex-shrink-0 self-center') do
-              img(src: '/images/myphoto.jpg', alt: 'My Photo', class: 'w-64 h-64 rounded-full mx-auto mb-6')
+              img(src: '/images/myphoto.jpg', alt: 'My Photo',
+                  class: 'w-64 h-64 rounded-full mx-auto mb-6 border border-black')
             end
+          end
+        end
+        #---Social Media Icons---
+        div(class: 'flex space-x-4 p-6 ml-20') do
+          a(href: 'https://github.com/thomasridgeon', target: '_blank') do
+            img(src: '/images/github-mark.png', alt: 'GitHub Profile', class: 'w-10 h-10')
+          end
+          a(href: 'https://linkedin.com/in/thomas-ridgeon-72b455370', target: '_blank') do
+            img(src: '/images/InBug-Black.png', alt: 'LinkedIn Profile', class: 'w-10 h-10')
           end
         end
       end
@@ -183,7 +205,8 @@ class ProjectsPage < Erector::Widget
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
         title "Hey I'm Thomas!"
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
-        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+             rel: 'stylesheet'
 
         # CSS code to add custom font
         style do
@@ -197,7 +220,7 @@ class ProjectsPage < Erector::Widget
 
       body(class: 'bg-white text-black') do
         #---Nav bar---
-        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+        nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
           # Left Side
           div do
             a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
@@ -295,7 +318,8 @@ class PortChargesCalculatorPage < Erector::Widget
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
         link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
-        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+             rel: 'stylesheet'
 
         # Custom font CSS
         style do
@@ -542,7 +566,8 @@ class SolarDCalculatorPage < Erector::Widget
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
         link(rel: 'preconnect', href: 'https://fonts.googleapis.com')
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
-        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+             rel: 'stylesheet'
 
         # Custom font CSS
         style do
@@ -807,7 +832,8 @@ class SunBenefitsPage < Erector::Widget
         link(rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous')
         title "Hey I'm Thomas!"
         link rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'
-        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap', rel: 'stylesheet'
+        link href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap',
+             rel: 'stylesheet'
 
         # CSS code to add custom font
         style do
@@ -821,7 +847,7 @@ class SunBenefitsPage < Erector::Widget
 
       body(class: 'bg-white text-black') do
         #---Nav bar---
-        nav(class: 'bg-black text-white w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+        nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
           # Left Side
           div do
             a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
