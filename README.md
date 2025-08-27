@@ -1,6 +1,6 @@
 # My Ruby Apps
 
-This is a repository for the ruby apps I create while learning to program.
+This is a repository for my website and the web apps I have created while learning to program in Ruby.
 
 (Note: the code contains a lot of comments, which are my "study notes").
 
