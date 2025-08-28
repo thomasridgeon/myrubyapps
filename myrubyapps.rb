@@ -131,16 +131,16 @@ class AboutPage < Erector::Widget
 
       body(class: 'bg-white text-black') do
         #---Nav bar---
-        nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
+        nav(class: 'bg-black text-white font-semibold w-full px-6 py-4 flex flex-wrap justify-between items-center fixed top-0 left-0 right-0 shadow-md') do
           # Left Side
           div do
-            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors ml-20') do
+            a(href: '/', class: 'text-lg hover:text-gray-300 transition-colors') do
               text 'Home'
             end
           end
 
           # Right Side
-          div(class: 'space-x-6 mr-20') do
+          div(class: 'space-x-6') do
             a(href: '/about', class: 'text-lg hover:text-gray-300 transition-colors') { text 'About Me' }
             a(href: '/projects', class: 'text-lg hover:text-gray-300 transition-colors') { text 'Projects' }
             a(href: '/resume', class: 'text-lg hover:text-gray-300 transition-colors') { text 'Resume' }
@@ -150,13 +150,13 @@ class AboutPage < Erector::Widget
 
         #---Main content-----
 
-        div(class: 'max-w-5xl p-6 flex flex-col ml-20') do
+        div(class: 'max-w-5xl p-6 flex flex-col mx-auto sm:ml-20') do
           h1(class: 'text-5xl font-bold mt-28 mb-10') do
             text 'About Me'
           end
 
-          div(class: 'flex items-start gap-10') do
-            div(class: 'flex-1') do
+          div(class: 'flex flex-col md:flex-row items-center md:items-start gap-10') do
+            div(class: 'order-2 md:order-1 flex-1 text-center md:text-left') do
               p(class: 'text-base font-medium mb-4') do
                 text 'I am currently employed as a Customs Broker, however I am a technology enthusiast and long-time Linux user with a passion for open source software.'
               end
@@ -167,9 +167,9 @@ class AboutPage < Erector::Widget
                 text 'What began as "vibe coding" quickly grew into a genuine drive to understand how to build web applications from the ground up. I started with Ruby, guided by Chris Pine’s Learn to Program and supported by LLMs as on-demand coding tutors. My first milestone was recreating an application I had previously built on Replit—this time entirely from scratch in Ruby. From there, I went on to develop another web app and, eventually, this website, all written in Ruby.'
               end
             end
-            div(class: 'flex-shrink-0 self-center') do
+            div(class: 'order-1 md:order-2 flex-shrink-0 self-center') do
               img(src: '/images/myphoto.jpg', alt: 'My Photo',
-                  class: 'w-80 h-80 rounded-full mx-auto mb-6 border border-black')
+                  class: 'w-48 h-48 sm:w-80 sm:h-80 rounded-full mx-auto mb-6 border border-black')
             end
           end
         end
