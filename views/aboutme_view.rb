@@ -70,13 +70,17 @@ class AboutPage < Erector::Widget
 
         #---Main content-----
 
-        div(class: 'max-w-5xl p-6 flex flex-col mx-auto sm:ml-20') do
-          h1(class: 'text-5xl font-bold mt-28 mb-10') do
-            text 'About Me'
+        div(class: 'max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10 mt-20') do
+          div(class: 'order-1 md:order-2 flex-shrink-0') do
+            img(src: '/images/myphoto.jpg', alt: 'My Photo',
+                class: 'w-48 h-48 sm:w-80 sm:h-80 rounded-full mx-auto mb-6 md:mb-0')
           end
 
-          div(class: 'flex flex-col md:flex-row items-center md:items-start gap-10') do
-            div(class: 'order-2 md:order-1 flex-1 text-center md:text-left') do
+          div(class: 'order-2 md:order-1 flex-1 flex flex-col justify-center text-center md:text-left p-6 md:p-0') do
+            div(class: 'max-w-prose') do
+              h1(class: 'text-5xl font-bold mt-10 md:mt-0 mb-8') do
+                text 'About Me'
+              end
               p(class: 'text-base font-medium mb-4') do
                 text 'I am currently employed as a Customs Broker, however I am a technology enthusiast and long-time Linux user with a passion for open source software.'
               end
@@ -86,20 +90,16 @@ class AboutPage < Erector::Widget
               p(class: 'text-base font-medium mb-4') do
                 text 'What began as "vibe coding" quickly grew into a genuine drive to understand how to build web applications from the ground up. I started with Ruby, guided by Chris Pine’s Learn to Program and supported by LLMs as on-demand coding tutors. My first milestone was recreating an application I had previously built on Replit—this time entirely from scratch in Ruby. From there, I went on to develop another web app and, eventually, this website, all written in Ruby.'
               end
+              #---Social Media Icons---
+              div(class: 'flex space-x-4 mt-6 justify-center md:justify-start') do
+                a(href: 'https://github.com/thomasridgeon', target: '_blank') do
+                  img(src: '/images/github-mark.png', alt: 'GitHub Profile', class: 'w-10 h-10')
+                end
+                a(href: 'https://linkedin.com/in/thomas-ridgeon-72b455370', target: '_blank') do
+                  img(src: '/images/InBug-Black.png', alt: 'LinkedIn Profile', class: 'w-10 h-10')
+                end
+              end
             end
-            div(class: 'order-1 md:order-2 flex-shrink-0 self-center') do
-              img(src: '/images/myphoto.jpg', alt: 'My Photo',
-                  class: 'w-48 h-48 sm:w-80 sm:h-80 rounded-full mx-auto mb-6 border border-black')
-            end
-          end
-        end
-        #---Social Media Icons---
-        div(class: 'flex space-x-4 p-6 ml-20') do
-          a(href: 'https://github.com/thomasridgeon', target: '_blank') do
-            img(src: '/images/github-mark.png', alt: 'GitHub Profile', class: 'w-10 h-10')
-          end
-          a(href: 'https://linkedin.com/in/thomas-ridgeon-72b455370', target: '_blank') do
-            img(src: '/images/InBug-Black.png', alt: 'LinkedIn Profile', class: 'w-10 h-10')
           end
         end
       end
