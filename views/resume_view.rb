@@ -79,10 +79,10 @@ class ResumePage < Erector::Widget
                   class: 'w-56 h-56 md:ml-20 rounded-full')
 
               div(class: 'mt-6 md:mt-0 md:ml-6 text-center md:text-left') do
-                h1(class: 'text-7xl font-bold') do
+                h1(class: 'text-5xl md:text-7xl font-bold') do
                   text 'Thomas Ridgeon'
                 end
-                p(class: 'text-4xl font-medium mt-8') do
+                p(class: 'text-2xl md:text-4xl font-medium mt-8') do
                   text 'Customs Broker'
                 end
               end

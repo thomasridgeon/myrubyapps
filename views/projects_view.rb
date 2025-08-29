@@ -70,20 +70,20 @@ class ProjectsPage < Erector::Widget
 
         #---Main content-----
 
-        div(class: 'max-w-2xl p-6 flex flex-col items-start ml-20') do
-          h1(class: 'text-5xl font-bold mt-28 mb-10') do
+        div(class: 'max-w-2xl p-4 sm:p-6 flex flex-col items-start mx-4 sm:mx-auto') do
+          h1(class: 'text-3xl sm:text-5xl font-bold mt-24 sm:mt-28 mb-6 sm:mb-10') do
             text 'My Projects'
           end
-          a(href: '/portcharges', class: 'text-xl font-bold hover:text-gray-300 transition-colours') do
+          a(href: '/portcharges', class: 'text-lg sm:text-xl font-bold hover:text-gray-300 transition-colours') do
             text 'Port Charges Calculator'
           end
-          p(class: 'text-base mb-4') do
-            text "This is the first web app I coded from scratch. It's one of the tools I had created with Replit for my Customs Broker Toolkit. It's a simple web app for customs brokers in Barbados to calculate Barbados Port Charges."
+          p(class: 'text-sm sm:text-base mb-4') do
+            text "This is the first web app I coded. It's one of the customs broker tools I had originally \"vibe coded\" with Replit. I then re-wrote it in Ruby. It's a simple web app for customs brokers in Barbados to calculate Barbados Port Charges."
           end
-          a(href: '/solardcalculator', class: 'text-xl font-bold hover:text-gray-300 transition-colours') do
+          a(href: '/solardcalculator', class: 'text-lg sm:text-xl font-bold hover:text-gray-300 transition-colours') do
             text 'Solar D Calculator'
           end
-          p(class: 'text-base mb-4') do
+          p(class: 'text-sm sm:text-base mb-4') do
             text 'This is a web app which tells you the current UV index of the sun in your region and calculates, based on your age and skin type, the amount of time you would have to be outside with at least 25% of your body exposed to synthesize an optimum daily amount of vitamin D (1,000 IU).'
           end
         end

@@ -74,20 +74,20 @@ class HomePage < Erector::Widget
 
         #---Main content-----
 
-        div(class: 'w-full md:max-w-2xl p-4 md:p-6 pt-16 md:pt-0 flex flex-col items-center md:items-start ml-0 md:ml-20') do
+        div(class: 'w-full md:max-w-2xl p-4 md:p-6 pt-16 md:pt-0 flex flex-col items-start mx-4 md:ml-20') do
           div(class: 'max-w-prose w-full') do
-            h1(class: 'text-5xl md:text-7xl font-bold mt-10 md:mt-28 mb-10 text-center md:text-left') do # h1 only needs a bottom margin to space itself from the paragraphs below.
+            h1(class: 'text-5xl md:text-7xl font-bold mt-10 md:mt-28 mb-10 text-left') do # h1 only needs a bottom margin to space itself from the paragraphs below.
               text 'Hey!'
             end
-            p(class: 'text-2xl md:text-5xl font-semibold mb-8 text-center md:text-left') do
+            p(class: 'text-2xl md:text-5xl font-semibold mb-8 text-left') do
               text 'My name is Thomas Ridgeon'
             end
-            p(class: 'text-base md:text-lg mb-4 text-center md:text-left') do
-              text 'This is my website I coded from scratch where you can read a bit about me and try out some of the webapps I created while learning to program.'
+            p(class: 'text-base sm:text-lg mb-4 text-left') do
+              text 'This is my website where you can read a bit about me and try out some of the web apps I\'ve created while learning to program.'
             end
 
             #---Social Media Icons---
-            div(class: 'flex space-x-4 pt-4 md:pt-6 justify-center md:justify-start') do
+            div(class: 'flex space-x-4 pt-4 md:pt-6 justify-start') do
               a(href: 'https://github.com/thomasridgeon', target: '_blank') do
                 img(src: '/images/github-mark.png', alt: 'GitHub Profile', class: 'w-10 h-10')
               end

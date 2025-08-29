@@ -73,12 +73,12 @@ class AboutPage < Erector::Widget
         div(class: 'max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10 mt-20') do
           div(class: 'order-1 md:order-2 flex-shrink-0') do
             img(src: '/images/myphoto.jpg', alt: 'My Photo',
-                class: 'w-48 h-48 sm:w-80 sm:h-80 rounded-full mx-auto mb-6 md:mb-0')
+                class: 'w-48 h-48 sm:w-80 sm:h-80 rounded-full mx-auto mb-2 md:mb-0')
           end
 
           div(class: 'order-2 md:order-1 flex-1 flex flex-col justify-center text-center md:text-left p-6 md:p-0') do
             div(class: 'max-w-prose') do
-              h1(class: 'text-5xl font-bold mt-10 md:mt-0 mb-8') do
+              h1(class: 'text-5xl font-bold mt-0 mb-8') do
                 text 'About Me'
               end
               p(class: 'text-base font-medium mb-4') do
