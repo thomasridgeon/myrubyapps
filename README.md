@@ -48,13 +48,6 @@ Once you have navigated to your parent directory, run the following command:
 git clone git@github.com:thomasridgeon/myrubyapps.git
 ```
 
-You should now see this repository's directory within your parent directory, with the following files inside of it:
-* Gemfile
-* Gemfile.lock
-* config.ru
-* myrubyapps.rb
-* README.md
-
 Finally, in your terminal, navigate to the repository directory and run the following command:
 
 ```bash
@@ -69,11 +62,11 @@ Now you're ready to run the app in localhost. To do so, run the following comman
 bundle exec puma
 ```
 
-You can now open your browser and go to the link provided in your terminal, such as http://0.0.0.0:9292 
+You can now open your browser and go to the link provided in your terminal.
 
-To navigate to the Port Charges Calculator, use the /portcharges path http://0.0.0.0:9292/portcharges
+To navigate to the Port Charges Calculator, use the /portcharges path, for example http://0.0.0.0:9292/portcharges
 
-To navigate to the Solar D Calculator, use the /solardcalculator path http://0.0.0.0:9292/solardcalculator 
+To navigate to the Solar D Calculator, use the /solardcalculator path. for example http://0.0.0.0:9292/solardcalculator 
 
 
 
